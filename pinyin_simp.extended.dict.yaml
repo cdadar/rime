@@ -13,8 +13,8 @@
 #
 
 ---
-name: luna_pinyin.extended
-version: "2014.09.07"
+name: pinyin_simp.extended
+version: "2020.06.22"
 sort: by_weight
 use_preset_vocabulary: true
 #下面的是本词库包含的所有词库，请根据需要开启/禁用，词条前添删#号即可开启/关闭词库。

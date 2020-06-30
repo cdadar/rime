@@ -1,7 +1,8 @@
+__include: "emoji_suggestion:/patch"
 abc_segmentor:
   extra_tags:
     - reverse_lookup
-customization: 1363755585
+customization: 1753832740
 engine:
   filters:
     - simplifier
@@ -48,13 +49,13 @@ schema:
     - "double pinyin layout by 鶴"
     - "Rime schema by 佛振 <chen.sst@gmail.com>"
   dependencies:
-    - kaomoji
+    - stroke
   description: |
     朙月拼音＋小鶴雙拼方案。
     
   name: "小鶴雙拼"
   schema_id: double_pinyin_flypy
-  version: 0.18.custom.1363755585
+  version: 0.18.custom.1753832740
 simplifier:
   option_name: zh_simp
 speller:
@@ -97,7 +98,7 @@ style:
   horizontal: true
 switches:
   - name: ascii_mode
-    reset: 1
+    reset: 0
     states: ["中文", "西文"]
   - name: full_shape
     states: ["半角", "全角"]
@@ -105,7 +106,6 @@ switches:
     reset: 1
     states: ["漢字", "汉字"]
   - name: ascii_punct
-    reset: 1
     states: ["。，", "．，"]
 translator:
   dictionary: pinyin_simp.extended

@@ -23,3 +23,17 @@ import_tables:
   - pinyin_simp
   - zhwiki
   - kaomoji
+  - luna_pinyin.biaoqing
+  - luna_pinyin.chat
+  - luna_pinyin.cn_en
+  - luna_pinyin.computer
+  - luna_pinyin.english
+  - luna_pinyin.extra_hanzi
+  - luna_pinyin.net
+  - luna_pinyin.place
+  - luna_pinyin.poetry
+  - luna_pinyin.sgmain
+  - luna_pinyin.sgplus
+  - luna_pinyin.sgplus2
+  - luna_pinyin.shopping
+  - luna_pinyin.user

@@ -2,7 +2,7 @@ __include: "emoji_suggestion:/patch"
 abc_segmentor:
   extra_tags:
     - reverse_lookup
-customization: 1753832740
+customization: 1433441495
 engine:
   filters:
     - simplifier
@@ -55,7 +55,7 @@ schema:
     
   name: "小鶴雙拼"
   schema_id: double_pinyin_flypy
-  version: 0.18.custom.1753832740
+  version: 0.18.custom.1433441495
 simplifier:
   option_name: zh_simp
 speller:
@@ -98,7 +98,7 @@ style:
   horizontal: true
 switches:
   - name: ascii_mode
-    reset: 0
+    reset: 1
     states: ["中文", "西文"]
   - name: full_shape
     states: ["半角", "全角"]

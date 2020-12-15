@@ -14,7 +14,7 @@ patch:
     - schema: double_pinyin_flypy
     - schema: kaomoji
   menu:
-      page_size: 5
+      page_size: 9
   switcher:
     abbreviate_options: true
     caption: "〔切换〕"          #把默认的“方案選單”修改为了“切换”。

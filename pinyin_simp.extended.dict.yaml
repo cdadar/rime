@@ -29,11 +29,14 @@ import_tables:
   - luna_pinyin.computer
   - luna_pinyin.english
   - luna_pinyin.extra_hanzi
+  - luna_pinyin.game
   - luna_pinyin.net
   - luna_pinyin.place
   - luna_pinyin.poetry
+  - luna_pinyin.practical
   - luna_pinyin.sgmain
   - luna_pinyin.sgplus
   - luna_pinyin.sgplus2
   - luna_pinyin.shopping
+  - luna_pinyin.sougou
   - luna_pinyin.user

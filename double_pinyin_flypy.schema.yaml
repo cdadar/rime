@@ -2,7 +2,7 @@ __include: "emoji_suggestion:/patch"
 abc_segmentor:
   extra_tags:
     - reverse_lookup
-customization: 2595527651
+customization: 2100891498
 emoji_suggestion:
   opencc_config: emoji.json
   option_name: emoji_suggestion
@@ -30,6 +30,7 @@ engine:
     - punct_translator
     - r10n_translator
     - reverse_lookup_translator
+    - script_translator
 key_binder:
   import_preset: default
 punctuator:
@@ -59,7 +60,7 @@ schema:
     
   name: "小鶴雙拼"
   schema_id: double_pinyin_flypy
-  version: 0.18.custom.2595527651
+  version: 0.18.custom.2100891498
 simplifier:
   option_name: zh_simp
 speller:
@@ -114,6 +115,9 @@ switches:
     states: ["漢字", "汉字"]
   - name: ascii_punct
     states: ["。，", "．，"]
+  - options: [utf8, gbk, gb2312]
+    reset: 0
+    states: ["UTF-8", GBK, GB2312]
 translator:
   dictionary: pinyin_simp.extended
   preedit_format:

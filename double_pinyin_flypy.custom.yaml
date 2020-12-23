@@ -3,14 +3,10 @@
 
 patch:
   __include: emoji_suggestion:/patch
-  style/font_face: "Noto Serif SC"  # 字體名稱，從記事本等處的系統字體對話框裏能看到
-  style/font_point: 14              # 字號，只認數字的，不認「五號」、「小五」這樣的
-  style/horizontal: true      # 候選橫排
-  engine/translators:
-    - punct_translator
-    - r10n_translator
-    - reverse_lookup_translator
-  recognizer/patterns/reverse_lookup: "^[a-z]{2,}$|^v[a-z]*$|^`[a-z]*$"
+  style:
+    font_face: "Noto Serif SC"  # 字體名稱，從記事本等處的系統字體對話框裏能看到
+    font_point: 14              # 字號，只認數字的，不認「五號」、「小五」這樣的
+    horizontal: true      # 候選橫排
   schema/dependencies:
     - stroke
   abc_segmentor/extra_tags:
@@ -31,6 +27,12 @@ patch:
       states: [ 漢字, 汉字 ]
     - name: ascii_punct
       states: [ 。，, ．， ]
+    - options: ["utf8", "gbk", "gb2312"] # (※2)字符集选单
+      reset: 0                           #     默认 UTF
+      states:
+        - UTF-8
+        - GBK
+        - GB2312
 
   simplifier:
     option_name: zh_simp
@@ -54,6 +56,7 @@ patch:
       - fallback_segmentor
     translators:
       - punct_translator
+      - r10n_translator
       - reverse_lookup_translator
       - script_translator
     filters:
@@ -158,4 +161,4 @@ patch:
   recognizer:
     import_preset: default
     patterns:
-      reverse_lookup: "`[a-z]*'?$"
+      reverse_lookup: "^[a-z]{2,}$|^v[a-z]*$|^`[a-z]*$"

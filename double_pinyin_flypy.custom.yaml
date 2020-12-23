@@ -21,6 +21,9 @@ patch:
     - name: ascii_mode
       reset: 1
       states: [ 中文, 西文 ]
+    - name: emoji_suggestion
+      reset: 1
+      states: [ "No", "Yes" ]
     - name: full_shape
       states: [ 半角, 全角 ]
     - name: zh_simp
@@ -54,8 +57,13 @@ patch:
       - reverse_lookup_translator
       - script_translator
     filters:
+      - simplifier@emoji_suggestion
       - simplifier
       - uniquifier
+
+  emoji_suggestion:
+    opencc_config: emoji.json
+    option_name: emoji_suggestion
 
   speller:
     alphabet: zyxwvutsrqponmlkjihgfedcba

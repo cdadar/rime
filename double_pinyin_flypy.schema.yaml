@@ -2,9 +2,13 @@ __include: "emoji_suggestion:/patch"
 abc_segmentor:
   extra_tags:
     - reverse_lookup
-customization: 1433441495
+customization: 2595527651
+emoji_suggestion:
+  opencc_config: emoji.json
+  option_name: emoji_suggestion
 engine:
   filters:
+    - "simplifier@emoji_suggestion"
     - simplifier
     - uniquifier
   processors:
@@ -55,7 +59,7 @@ schema:
     
   name: "小鶴雙拼"
   schema_id: double_pinyin_flypy
-  version: 0.18.custom.1433441495
+  version: 0.18.custom.2595527651
 simplifier:
   option_name: zh_simp
 speller:
@@ -100,6 +104,9 @@ switches:
   - name: ascii_mode
     reset: 1
     states: ["中文", "西文"]
+  - name: emoji_suggestion
+    reset: 1
+    states: [No, Yes]
   - name: full_shape
     states: ["半角", "全角"]
   - name: zh_simp

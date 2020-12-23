@@ -2,7 +2,7 @@ __include: "emoji_suggestion:/patch"
 abc_segmentor:
   extra_tags:
     - reverse_lookup
-customization: 2100891498
+customization: 1635156086
 emoji_suggestion:
   opencc_config: emoji.json
   option_name: emoji_suggestion
@@ -60,7 +60,7 @@ schema:
     
   name: "小鶴雙拼"
   schema_id: double_pinyin_flypy
-  version: 0.18.custom.2100891498
+  version: 0.18.custom.1635156086
 simplifier:
   option_name: zh_simp
 speller:
@@ -97,10 +97,6 @@ speller:
     - "xlit/QWRTYUIOPSDFGHJKLZXCVBNM/qwrtyuiopsdfghjklzxcvbnm/"
   alphabet: zyxwvutsrqponmlkjihgfedcba
   delimiter: " '"
-style:
-  font_face: "Noto Serif SC"
-  font_point: 14
-  horizontal: true
 switches:
   - name: ascii_mode
     reset: 1

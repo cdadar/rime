@@ -13,6 +13,11 @@ patch:
     - schema: wubi86
     - schema: double_pinyin_flypy
     - schema: kaomoji
+  style:
+    font_face: "Noto Serif SC"  # 字體名稱，從記事本等處的系統字體對話框裏能看到
+    font_point: 14              # 字號，只認數字的，不認「五號」、「小五」這樣的
+    horizontal: true      # 候選橫排
+
   menu:
       page_size: 9
   switcher:

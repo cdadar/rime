@@ -1,3 +1,13 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# 「Rime词库扩展计划」——为RIME打造一个强大好用的词库
+---
+name: luna_pinyin.computer
+version: "20210310"
+sort: by_weight
+use_preset_vocabulary: true
+...
 艾尔莎	ai er sha	1
 爱林莎	ai lin sha	1
 昂达	ang da	1

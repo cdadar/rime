@@ -25,6 +25,7 @@ import_tables:
   - zhwiki
   - kaomoji
   - luna_pinyin.biaoqing
+  - luna_pinyin.bible
   - luna_pinyin.chat
   - luna_pinyin.cn_en
   - luna_pinyin.hanyu

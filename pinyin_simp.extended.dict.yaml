@@ -27,6 +27,7 @@ import_tables:
   - luna_pinyin.biaoqing
   - luna_pinyin.chat
   - luna_pinyin.cn_en
+  - luna_pinyin.hanyu
   - luna_pinyin.computer
   - luna_pinyin.english
   - luna_pinyin.extra_hanzi
@@ -39,5 +40,6 @@ import_tables:
   - luna_pinyin.sgplus
   - luna_pinyin.sgplus2
   - luna_pinyin.shopping
+  - luna_pinyin.anime
   - luna_pinyin.sougou
   - luna_pinyin.user

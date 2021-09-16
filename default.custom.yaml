@@ -48,9 +48,12 @@ patch:
 # 如果要以 Caps Lock 切換到西文模式，默認輸出大寫字母，請使用以下設置：
   ascii_composer/good_old_caps_lock: true
   ascii_composer/switch_key:
-    Caps_Lock: commit_code
-    Shift_L: commit_code
-    Shift_R: commit_code
+    Shift_L: inline_ascii
+    Shift_R: commit_text
+    Control_L: noop
+    Control_R: noop
+    Caps_Lock: clear
+    Eisu_toggle: clear
 
   'punctuator/import_preset': alternative
   'key_binder/import_preset': alternative

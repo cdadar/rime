@@ -1,0 +1,21 @@
+* 个人的 rime 的配置
+
+配置了小鹤双拼的schema
+
+** 部署
+
+*** linux
+fcitx
+: ln -s path ~/.config/fcitx/
+
+fcitx5
+: ln -s path ~/.local/share/fcitx5/
+
+ibus
+: ln -s path ~/.config/ibus/
+
+*** window
+默认的配置文件路径获取： =【小狼毫】用户文件夹= 
+将配置复制到 =C:\Users\Administrator\AppData\Roaming\Rime= 文件下
+
+

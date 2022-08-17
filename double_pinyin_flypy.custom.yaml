@@ -11,7 +11,7 @@ patch:
 
   switches:
     - name: ascii_mode
-      reset: 1
+      reset: 0
       states: [ 中文, 西文 ]
     - name: emoji_suggestion
       states: [ "🈚️️\uFE0E", "🈶️️\uFE0F" ]
@@ -51,7 +51,6 @@ patch:
       - fallback_segmentor
     translators:
       - punct_translator
-      - r10n_translator
       - reverse_lookup_translator
       - script_translator
     filters:
@@ -135,7 +134,6 @@ patch:
       - "xform/(^|[ '])u/$1sh/"
       - xform/([jqxy])v/$1u/
 
-
   reverse_lookup:
     dictionary: stroke
     enable_completion: true
@@ -146,12 +144,6 @@ patch:
       - xlit/hspnz/一丨丿丶乙/
     comment_format:
       - xform/([nl])v/$1ü/
-
-  punctuator:
-    import_preset: default
-
-  key_binder:
-    import_preset: default
 
   recognizer:
     import_preset: default

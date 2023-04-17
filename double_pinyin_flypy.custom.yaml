@@ -17,7 +17,7 @@ patch:
       states: [ "🈚️️\uFE0E", "🈶️️\uFE0F" ]
     - name: full_shape
       states: [ 半角, 全角 ]
-    - name: zh_simp
+    - name: simplification
       reset: 1
       states: [ 漢字, 汉字 ]
     - name: ascii_punct
@@ -28,10 +28,6 @@ patch:
         - UTF-8
         - GBK
         - GB2312
-
-  simplifier:
-    option_name: zh_simp
-
 
   engine:
     processors:

@@ -1,9 +1,6 @@
 patch:
   schema_list:
     - schema: double_pinyin_flypy
-    - schema: luna_pinyin_simp
-    - schema: cangjie5
-    - schema: wubi86
     - schema: kaomoji
   style:
     font_face: "LXGW WenKai"  # 字體名稱，從記事本等處的系統字體對話框裏能看到

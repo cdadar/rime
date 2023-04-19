@@ -1,7 +1,7 @@
 # Rime dictionary
 # encoding: utf-8
 #
-#  BetterRime词库增强包－实用版の准正式版 by @imy0823
+#  BetterRime 词库增强包－实用版の准正式版 by @imy0823
 #
 #
 # 部署位置：
@@ -18,40 +18,40 @@ version: "2020.06.22"
 sort: by_weight
 use_preset_vocabulary: true
 #下面的是本词库包含的所有词库，请根据需要开启/禁用，词条前添删#号即可开启/关闭词库。
-#双拼不支持 luna_pinyin.cn_en 词库，请用户手动禁用。
+#双拼不支持 pinyin_simp.cn_en 词库，请用户手动禁用。
 import_tables:
   - pinyin_simp
-  - luna_pinyin
+  - pinyin_simp
   - zhwiki
   - kaomoji
-  - luna_pinyin.thuocl_animal
-  - luna_pinyin.thuocl_caijing
-  - luna_pinyin.thuocl_car
-  - luna_pinyin.thuocl_chengyu
-  - luna_pinyin.thuocl_diming
-  - luna_pinyin.thuocl_food
-  - luna_pinyin.thuocl_it
-  - luna_pinyin.thuocl_law
-  - luna_pinyin.thuocl_lishimingren
-  - luna_pinyin.thuocl_medical
-  - luna_pinyin.thuocl_poem
-  - luna_pinyin.biaoqing
-  - luna_pinyin.bible
-  - luna_pinyin.chat
-  - luna_pinyin.cn_en
-  - luna_pinyin.hanyu
-  - luna_pinyin.computer
-  - luna_pinyin.english
-  - luna_pinyin.extra_hanzi
-  - luna_pinyin.game
-  - luna_pinyin.net
-  - luna_pinyin.place
-  - luna_pinyin.poetry
-  - luna_pinyin.practical
-  - luna_pinyin.sgmain
-  - luna_pinyin.sgplus
-  - luna_pinyin.sgplus2
-  - luna_pinyin.shopping
-  - luna_pinyin.anime
-  - luna_pinyin.sougou
-  - luna_pinyin.user
+  - pinyin_simp.thuocl_animal
+  - pinyin_simp.thuocl_caijing
+  - pinyin_simp.thuocl_car
+  - pinyin_simp.thuocl_chengyu
+  - pinyin_simp.thuocl_diming
+  - pinyin_simp.thuocl_food
+  - pinyin_simp.thuocl_it
+  - pinyin_simp.thuocl_law
+  - pinyin_simp.thuocl_lishimingren
+  - pinyin_simp.thuocl_medical
+  - pinyin_simp.thuocl_poem
+  - pinyin_simp.biaoqing
+  - pinyin_simp.bible
+  - pinyin_simp.chat
+  - pinyin_simp.cn_en
+  - pinyin_simp.hanyu
+  - pinyin_simp.computer
+  - pinyin_simp.english
+  - pinyin_simp.extra_hanzi
+  - pinyin_simp.game
+  - pinyin_simp.net
+  - pinyin_simp.place
+  - pinyin_simp.poetry
+  - pinyin_simp.practical
+  - pinyin_simp.sgmain
+  - pinyin_simp.sgplus
+  - pinyin_simp.sgplus2
+  - pinyin_simp.shopping
+  - pinyin_simp.anime
+  - pinyin_simp.sougou
+  - pinyin_simp.user

@@ -1,3 +1,6 @@
+# Rime custom
+# encoding: utf-8
 patch:
-  translator:
-    dictionary: pinyin_simp.extended
+  __include: emoji_suggestion:/patch
+
+  'translator/dictionary': pinyin_simp.extended

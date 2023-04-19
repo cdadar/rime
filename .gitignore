@@ -2,8 +2,8 @@
 .place_holder
 default.yaml
 installation.yaml
-luna_pinyin.userdb.kct
-luna_pinyin.userdb/
+pinyin_simp.userdb.kct
+pinyin_simp.userdb/
 pinyin_simp.userdb/
 cangjie5.userdb/
 wubi86.userdb/
@@ -12,7 +12,7 @@ user.yaml
 weasel.yaml
 sync
 kaomoji.userdb/
-luna_pinyin.userdb.old/
+pinyin_simp.userdb.old/
 build/
 trash/
 *.schema.yaml

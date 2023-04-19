@@ -2,16 +2,5 @@
 # encoding: utf-8
 patch:
   __include: emoji_suggestion:/patch
-  switches:
-    - name: emoji_suggestion
-      states: [ "🈚️️\uFE0E", "🈶️️\uFE0F" ]
 
-    filters:
-      - simplifier@emoji_suggestion
-
-  emoji_suggestion:
-    opencc_config: emoji.json
-    option_name: emoji_suggestion
-
-  translator:
-    dictionary: pinyin_simp.extended
+  'translator/dictionary': pinyin_simp.extended

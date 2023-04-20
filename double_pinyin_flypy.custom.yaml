@@ -4,3 +4,5 @@ patch:
   __include: emoji_suggestion:/patch
 
   'translator/dictionary': pinyin_simp.extended
+
+  'reverse_lookup/dictionary': pinyin_simp.extended

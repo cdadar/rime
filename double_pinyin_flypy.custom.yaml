@@ -3,6 +3,7 @@
 patch:
   __include: emoji_suggestion:/patch
 
+  'switches/@0/reset': 1
   'switches/@2/reset': 1
 
   'translator/dictionary': pinyin_simp.extended

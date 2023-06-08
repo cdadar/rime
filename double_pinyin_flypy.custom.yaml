@@ -6,6 +6,8 @@ patch:
   'switches/@0/reset': 1
   'switches/@2/reset': 1
 
+  # 开启自定义词库
+  "translator/enable_user_dict": true
   'translator/dictionary': pinyin_simp.extended
 
   'reverse_lookup/dictionary': pinyin_simp.extended

@@ -27,11 +27,10 @@ import_tables:
   - pinyin_simp.biaoqing
   - pinyin_simp.bible
   - pinyin_simp.chat
-  - pinyin_simp.cn_en
+  # - pinyin_simp.cn_en
   - pinyin_simp.hanyu
   - pinyin_simp.computer
   - pinyin_simp.english
-  - pinyin_simp.extra_hanzi
   - pinyin_simp.game
   - pinyin_simp.net
   - pinyin_simp.place

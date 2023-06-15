@@ -2,7 +2,6 @@
 # encoding: utf-8
 patch:
   __include: emoji_suggestion:/patch
-  # 'schema/dependencies': {}
 
   'switches/@0/reset': 1
   'switches/@2/reset': 1

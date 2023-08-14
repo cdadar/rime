@@ -16,3 +16,4 @@ pinyin_simp.userdb.old/
 build/
 trash/
 *.schema.yaml
+luna_pinyin.userdb

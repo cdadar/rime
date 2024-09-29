@@ -13,7 +13,7 @@
 #
 
 ---
-name: luna_pinyin.shopping
+name: pinyin_simp.shopping
 version: "2016.10.29"
 sort: by_weight
 use_preset_vocabulary: true

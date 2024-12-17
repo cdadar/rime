@@ -6,6 +6,12 @@ patch:
   'switches/@0/reset': 1
   'switches/@2/reset': 1
 
+  grammar:
+    language: amz-v2n3m1-zh-hans
+    collocation_max_length: 5
+    collocation_min_length: 2
+
+
   # 开启自定义词库
   "translator/enable_user_dict": true
   'translator/dictionary': pinyin_simp.extended

@@ -9,7 +9,7 @@ patch:
     horizontal: true      # 候選橫排
 
   menu:
-      page_size: 9
+      page_size: 5
 
   switcher:
     abbreviate_options: true

@@ -3,7 +3,7 @@
 #
 # 「Rime词库扩展计划」——为RIME打造一个强大好用的词库
 ---
-name: pinyin_simp.bible
+name: bible
 version: "20210310"
 sort: by_weight
 use_preset_vocabulary: true

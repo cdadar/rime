@@ -13,7 +13,7 @@
 #
 
 ---
-name: pinyin_simp.english
+name: english
 version: "2016.10.29"
 sort: by_weight
 use_preset_vocabulary: true

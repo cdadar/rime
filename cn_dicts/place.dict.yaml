@@ -13,7 +13,7 @@
 #
 
 ---
-name: pinyin_simp.place
+name: place
 version: "2016.10.29"
 sort: by_weight
 use_preset_vocabulary: true

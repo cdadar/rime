@@ -20,6 +20,12 @@ use_preset_vocabulary: true
 #下面的是本词库包含的所有词库，请根据需要开启/禁用，词条前添删#号即可开启/关闭词库。
 #双拼不支持 pinyin_simp.cn_en 词库，请用户手动禁用。
 import_tables:
+  - cn_dicts/8105     # 字表
+  - cn_dicts/41448  # 大字表（按需启用）（启用时和 8105 同时启用并放在 8105 下面）
+  - cn_dicts/base     # 基础词库
+  - cn_dicts/ext      # 扩展词库
+  - cn_dicts/tencent  # 腾讯词向量（大词库，部署时间较长）
+  - cn_dicts/others   # 一些杂项
   - cn_dicts/zhwiki
   - cn_dicts/xiandaihanyuchangyongcibiao
   - cn_dicts/kaomoji
@@ -42,12 +48,7 @@ import_tables:
   - cn_dicts/anime
   - cn_dicts/sougou
   - cn_dicts/user
-  - cn_dicts/8105     # 字表
-  - cn_dicts/41448  # 大字表（按需启用）（启用时和 8105 同时启用并放在 8105 下面）
-  - cn_dicts/base     # 基础词库
-  - cn_dicts/ext      # 扩展词库
-  - cn_dicts/tencent  # 腾讯词向量（大词库，部署时间较长）
-  - cn_dicts/others   # 一些杂项
+
 
   # 建议把扩展词库放到下面，有重复词条时，最上面的权重生效
   # - mydict1           # 挂载配置目录下的 mydict1.dict.yaml 词库文件

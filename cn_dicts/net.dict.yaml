@@ -13,7 +13,7 @@
 #
 
 ---
-name: pinyin_simp.net
+name: net
 version: "2015.06.07"
 sort: by_weight
 use_preset_vocabulary: true

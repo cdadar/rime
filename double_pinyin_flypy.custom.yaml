@@ -13,6 +13,6 @@ patch:
 
 
   # 开启自定义词库
-  # translator/enable_user_dict: true
-  # translator/dictionary: pinyin_simp.extended
-  # radical_reverse_lookup/dictionary: pinyin_simp.extended
+  translator/enable_user_dict: true
+  translator/dictionary: pinyin_simp.extended
+  radical_reverse_lookup/dictionary: pinyin_simp.extended

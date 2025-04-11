@@ -43,3 +43,4 @@ import_tables:
   - pinyin_simp.anime
   - pinyin_simp.sougou
   - pinyin_simp.user
+  - rime_ice

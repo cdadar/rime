@@ -1,10 +1,7 @@
 # Rime custom
 # encoding: utf-8
 patch:
-  __include: emoji_suggestion:/patch
-
-  'switches/@0/reset': 1
-  'switches/@2/reset': 1
+  # switches/@0/reset: 1
 
   grammar:
     language: amz-v2n3m1-zh-hans
@@ -16,5 +13,6 @@ patch:
 
 
   # 开启自定义词库
-  "translator/enable_user_dict": true
-  'translator/dictionary': pinyin_simp.extended
+  # translator/enable_user_dict: true
+  # translator/dictionary: pinyin_simp.extended
+  # radical_reverse_lookup/dictionary: pinyin_simp.extended

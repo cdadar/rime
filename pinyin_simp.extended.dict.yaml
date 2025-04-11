@@ -20,27 +20,26 @@ use_preset_vocabulary: true
 #下面的是本词库包含的所有词库，请根据需要开启/禁用，词条前添删#号即可开启/关闭词库。
 #双拼不支持 pinyin_simp.cn_en 词库，请用户手动禁用。
 import_tables:
-  - pinyin_simp
-  - zhwiki
-  - pinyin_simp.xiandaihanyuchangyongcibiao
-  - kaomoji
-  - pinyin_simp.biaoqing
-  - pinyin_simp.bible
-  - pinyin_simp.chat
-  # - pinyin_simp.cn_en
-  - pinyin_simp.hanyu
-  - pinyin_simp.computer
-  - pinyin_simp.english
-  - pinyin_simp.game
-  - pinyin_simp.net
-  - pinyin_simp.place
-  - pinyin_simp.poetry
-  - pinyin_simp.practical
-  - pinyin_simp.sgmain
-  - pinyin_simp.sgplus
-  - pinyin_simp.sgplus2
-  - pinyin_simp.shopping
-  - pinyin_simp.anime
-  - pinyin_simp.sougou
-  - pinyin_simp.user
+  - cn_dicts/zhwiki
+  - cn_dicts/xiandaihanyuchangyongcibiao
+  - cn_dicts/kaomoji
+  - cn_dicts/biaoqing
+  - cn_dicts/bible
+  - cn_dicts/chat
+  # - cn_dicts/cn_en
+  - cn_dicts/hanyu
+  - cn_dicts/computer
+  - cn_dicts/english
+  - cn_dicts/game
+  - cn_dicts/net
+  - cn_dicts/place
+  - cn_dicts/poetry
+  - cn_dicts/practical
+  - cn_dicts/sgmain
+  - cn_dicts/sgplus
+  - cn_dicts/sgplus2
+  - cn_dicts/shopping
+  - cn_dicts/anime
+  - cn_dicts/sougou
+  - cn_dicts/user
   - rime_ice

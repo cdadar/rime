@@ -12,26 +12,7 @@ import_tables:
   - cn_dicts/tencent  # 腾讯词向量（大词库，部署时间较长）
   - cn_dicts/others   # 一些杂项
   - cn_dicts/zhwiki
-  - cn_dicts/xiandaihanyuchangyongcibiao
-  - cn_dicts/kaomoji
-  - cn_dicts/biaoqing
   - cn_dicts/bible
-  - cn_dicts/chat
-  - cn_dicts/hanyu
-  - cn_dicts/computer
-  - cn_dicts/english
-  - cn_dicts/game
-  - cn_dicts/net
-  - cn_dicts/place
-  - cn_dicts/poetry
-  - cn_dicts/practical
-  - cn_dicts/sgmain
-  - cn_dicts/sgplus
-  - cn_dicts/sgplus2
-  - cn_dicts/shopping
-  - cn_dicts/anime
-  - cn_dicts/sougou
-  - cn_dicts/user
 
   # 建议把扩展词库放到下面，有重复词条时，最上面的权重生效
   # - mydict1           # 挂载配置目录下的 mydict1.dict.yaml 词库文件

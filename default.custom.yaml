@@ -1,7 +1,7 @@
 patch:
   schema_list:
     - schema: double_pinyin_flypy
-    - schema: pinyin_simp
+    - schema: rime_ice
 
   style/font_face: "LXGW WenKai"  # 字體名稱，從記事本等處的系統字體對話框裏能看到
   style/font_point: 13              # 字號，只認數字的，不認「五號」、「小五」這樣的
@@ -14,7 +14,7 @@ patch:
   switcher/hotkeys:
     - Control+grave
 
-  translator/dictionary: pinyin_simp.extended  # (※4) 并继续使用 pinyin_simp 字典
+  # translator/dictionary: pinyin_simp.extended  # (※4) 并继续使用 pinyin_simp 字典
 
   key_binder/bindings/+:
     # emacs_editing:

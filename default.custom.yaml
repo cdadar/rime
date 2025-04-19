@@ -33,5 +33,10 @@ patch:
     - { when: composing, accept: Alt+v, send: Page_Up }
     - { when: composing, accept: Control+v, send: Page_Down }
     # full_shape or ascii_punct
-    - {accept: "Shift+space", toggle: full_shape, when: always}
-    - {accept: "Control+comma", toggle: ascii_punct, when: always}
+    - { when: always, accept: "Shift+space", toggle: full_shape }
+    - { when: always, accept: "Control+comma", toggle: ascii_punct }
+    # 设置失败
+    # - { when: always, accept: Super_L+comma, toggle: full_shape }
+    # - { when: always, accept: Super_L+period, toggle: ascii_punct }
+    # - { when: always, accept: Meta_L+comma, toggle: full_shape }
+    # - { when: always, accept: Meta_L+period, toggle: ascii_punct }

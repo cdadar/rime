@@ -1,7 +1,7 @@
 # Rime custom
 # encoding: utf-8
 patch:
-  # switches/@0/reset: 1
+  switches/@0/reset: 1
 
   # grammar:
   #   language: amz-v2n3m1-zh-hans

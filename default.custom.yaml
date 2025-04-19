@@ -32,3 +32,6 @@ patch:
     - { when: composing, accept: Control+y, send: Page_Up }
     - { when: composing, accept: Alt+v, send: Page_Up }
     - { when: composing, accept: Control+v, send: Page_Down }
+    # full_shape or ascii_punct
+    - {accept: "Shift+space", toggle: full_shape, when: always}
+    - {accept: "Control+comma", toggle: ascii_punct, when: always}

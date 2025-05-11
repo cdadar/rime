@@ -8,7 +8,7 @@ patch:
   style/horizontal: true      # 候選橫排
 
   menu:
-      page_size: 5
+      page_size: 6
 
   # 方案选单相关
   switcher/hotkeys:

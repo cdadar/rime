@@ -7,3 +7,9 @@ patch:
     # __include: radical_pinyin.schema.yaml:/algebra_abc
     # __include: radical_pinyin.schema.yaml:/algebra_ziguang
     # __include: radical_pinyin.schema.yaml:/algebra_sogou
+__patch:
+# Rx: iDvel/rime-ice:others/recipes/config:schema=flypy {
+  - patch/+:
+      speller/algebra:
+        __include: radical_pinyin.schema.yaml:/algebra_flypy
+# }

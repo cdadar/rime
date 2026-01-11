@@ -10,3 +10,9 @@
       # __include: algebra_sogou          # 搜狗双拼
       # __include: algebra_abc            # 智能ABC双拼
       # __include: algebra_ziguang        # 紫光双拼
+__patch:
+# Rx: iDvel/rime-ice:others/recipes/config:schema=flypy {
+  - patch/+:
+      speller/algebra:
+        __include: melt_eng.schema.yaml:/algebra_flypy
+# }

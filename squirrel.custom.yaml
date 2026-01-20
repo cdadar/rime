@@ -1,5 +1,7 @@
 # example squirrel.custom.yaml
 patch:
+  app_options/org.gnu.Emacs:
+    ascii_mode: true
   app_options/com.apple.Xcode:
     ascii_mode: true
   app_options/com.jetbrains.pycharm:

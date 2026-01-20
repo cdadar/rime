@@ -28,7 +28,7 @@ local M = {}
 
 local byte, find, gsub, upper, sub = string.byte, string.find, string.gsub, string.upper, string.sub
 
---  工具 
+-- ========= 工具 =========
 local function fast_type(c)
     local t = c.type
     if t then return t end
@@ -72,73 +72,72 @@ local function has_english_token_fast(s)
     return false
 end
 
--- 纯ASCII判定
+-- ========= 英文候选判定 =========
+-- 使用现有的 has_english_token_fast 叠加 is_table_type：
+--   - 若不属于 table/user_table/fixed：只要含英文 token 即视为英文候选
+--   - 若属于 table/user_table/fixed：要求“只含 ASCII”（没有中文），且含英文 token
 local function is_english_candidate(cand)
-    local txt = cand and cand.text
-    if not txt or txt == "" then return false end
+    if not cand or not cand.text or cand.text == "" then return false end
+    local txt = cand.text
+
     if not has_english_token_fast(txt) then
         return false
     end
-    if string.find(txt, "[\128-\255]") then
-        return false
+
+    if is_table_type(cand) then
+        -- 表内候选如果混有非 ASCII（大概率是中文），就不当英文处理
+        for i = 1, #txt do
+            local b = byte(txt, i)
+            if b > 127 then
+                return false
+            end
+        end
     end
+
     return true
 end
 
---  文本格式化 (精简版：仅保留转义与重复)
+-- ========= 文本格式化（转义 + 自动大写）=========
 local escape_map = {
-    ["\\n"] = "\n",            -- 换行
-    ["\\r"] = "\r",            -- 回车
-    ["\\t"] = "\t",            -- 制表符
-    ["\\s"] = " ",             -- 空格
-    ["\\z"] = "\226\128\139",  -- 零宽空格 (隐形阻断符)
+    ["\\n"] = "\n", ["\\t"] = "\t", ["\\r"] = "\r",
+    ["\\\\"] = "\\", ["\\s"] = " ", ["\\d"] = "-",
 }
-
-local utf8_char_pattern = "[%z\1-\127\194-\244][\128-\191]*"
+local esc_pattern = "\\[ntrsd\\\\]"
 
 local function apply_escape_fast(text)
-    -- 快速预检
-    if not text or (not find(text, "\\", 1, true) and not find(text, "{", 1, true)) then 
-        return text, false 
-    end
-
-    local new_text = text
-    if find(new_text, "\\{", 1, true) then
-        new_text = gsub(new_text, "\\{", "\1")
-    end
-    if find(new_text, "\\", 1, true) then
-        new_text = gsub(new_text, "\\[ntrsz]", escape_map)
-    end
-    if find(new_text, "{", 1, true) then
-        new_text = gsub(new_text, "(" .. utf8_char_pattern .. ")%{(%d+)}", function(char, count)
-            local n = tonumber(count)
-            if n and n > 0 and n < 200 then
-                return string.rep(char, n)
-            end
-            return char .. "{" .. count .. "}"
-        end)
-    end
-    if find(new_text, "\1", 1, true) then
-        new_text = gsub(new_text, "\1", "{")
-    end
+    if not text or find(text, "\\", 1, true) == nil then return text, false end
+    local new_text = gsub(text, esc_pattern, function(esc) return escape_map[esc] or esc end)
     return new_text, new_text ~= text
 end
+
 local function format_and_autocap(cand)
     local text = cand.text
     if not text or text == "" then return cand end
-    local t2, changed = apply_escape_fast(text)
+    local changed = false
+    -- 转义替换 (\n, \t, \s 等)
+    -- 必须先处理转义，因为转义可能会改变字符串开头 (如 \sApple -> Apple)
+    if find(text, "\\", 1, true) then
+        local t2, ch = apply_escape_fast(text)
+        if ch then 
+            text = t2
+            changed = true
+        end
+    end
+    -- 输出结果
     if not changed then return cand end
-    local nc = Candidate(cand.type, cand.start, cand._end, t2, cand.comment)
+    
+    local nc = Candidate(cand.type, cand.start, cand._end, text, cand.comment)
     nc.preedit = cand.preedit
     return nc
 end
+
 local function clone_candidate(c)
     local nc = Candidate(c.type, c.start, c._end, c.text, c.comment)
     nc.preedit = c.preedit
     return nc
 end
 
---  包裹映射 
+-- ========= 包裹映射 =========
 local default_wrap_map = {
     -- 单字母：常用成对括号/引号（每项恰好两个字符）
     a = "[]",        -- 方括号
@@ -168,14 +167,14 @@ local default_wrap_map = {
     y = "⟪⟫",       -- 双角括号
     z = "{}",        -- 花括号
 
-    --  扩展括号族 / 引号 
+    -- ===== 扩展括号族 / 引号 =====
     dy = "''",       -- 英文单引号
     sy = "\"\"",     -- 英文双引号
     zs = "“”",       -- 中文弯双引号
     zd = "‘’",       -- 中文弯单引号
     fy = "``",       -- 反引号
 
-    --  双字母括号族 
+    -- ===== 双字母括号族 =====
     aa = "〚〛",      -- 双中括号
     bb = "〘〙",      -- 双中括号（小）
     cc = "〚〛",      -- 双中括号（重复，可用于 Lua 匹配）
@@ -202,7 +201,7 @@ local default_wrap_map = {
     yy = "⌠⌡",      -- 数学 / 程序符号
     zz = "⟅⟆",      -- 数学 / 装饰括号
 
-    --  Markdown / 标记 
+    -- ===== Markdown / 标记 =====
     md = "**|**",      -- Markdown 粗体
     jc = "**|**",      -- 加粗
     it = "__|__",      -- 斜体
@@ -223,7 +222,7 @@ local default_wrap_map = {
     br = "|  ",        -- 换行
     cm = "<!--|-->",   -- 注释
 
-    --  运算与标记符 
+    -- ===== 运算与标记符 =====
     pl = "++",
     mi = "--",
     sl = "//",
@@ -293,7 +292,7 @@ local function precompile_wrap_parts(wrap_map, delimiter)
     end
     return parts
 end
---  字符集过滤工具 
+-- ========= 字符集过滤工具 =========
 -- 单个码点是否在 charset 里（带缓存，考虑白名单 + 黑名单）
 local function codepoint_in_charset(env, codepoint)
     if not env then
@@ -391,7 +390,7 @@ local function is_reverse_lookup_segment(env)
         or seg:has_tag("add_user_dict")
         or seg:has_tag("punct")
 end
---  字符集过滤初始化 
+-- ========= 字符集过滤初始化 =========
 -- 从 schema 里读取 charsetlist / charsetblacklist
 local function init_charset_filter(env, cfg)
     -- 主字符集（表滤镜）
@@ -442,7 +441,7 @@ local function init_charset_filter(env, cfg)
     load_charset_list("charsetblacklist", env.charset_block)
 end
 
---  生命周期 
+-- ========= 生命周期 =========
 function M.init(env)
     local cfg = env.engine and env.engine.schema and env.engine.schema.config or nil
     env.wrap_map   = cfg and load_mapping_from_config(cfg) or default_wrap_map
@@ -490,7 +489,7 @@ end
 
 function M.fini(env)
 end
---  统一产出通道 
+-- ========= 统一产出通道 =========
 -- ctxs:
 --   charset          : 字符集过滤
 --   suppress_set     : { [text] = true } 阻止镜像文本
@@ -501,9 +500,7 @@ end
 --   is_english       : 函数(cand) → bool
 local function emit_with_pipeline(cand, ctxs)
     if not cand then return end
-    if ctxs.pinned_set and ctxs.pinned_set[cand.text] then
-        return
-    end
+
     local env = ctxs.env
 
     -- ① 字符集过滤：只有在 charset_strict = true 时才启用
@@ -545,7 +542,7 @@ local function emit_with_pipeline(cand, ctxs)
     cand = ctxs.unify_tail_span(cand)
     yield(cand)
 end
---  主流程 
+-- ========= 主流程 =========
 function M.func(input, env)
     local ctx  = env and env.engine and env.engine.context or nil
     local code = ctx and (ctx.input or "") or ""
@@ -626,18 +623,7 @@ function M.func(input, env)
         en_only = ctx:get_option("en_only") or false
         zh_only = ctx:get_option("zh_only") or false
     end
-    -- 全拼输入 bun 置顶“不能”逻辑
-    local pinned_set = nil
-    if code == "bun" then
-        local s_id = wanxiang.get_input_method_type(env)
-        if s_id == "pinyin" then
-            local text = "不能"
-            local c = Candidate("fixed", 0, #code, text, "")
-            c.preedit = "bu n"
-            yield(c)
-            pinned_set = { [text] = true } -- 记录到表中，供 emit_with_pipeline 去重
-        end
-    end
+
     local function unify_tail_span(c)
         if fully_consumed and wrap_key and last_seg and c and c._end ~= last_seg._end then
             local nc = Candidate(c.type, c.start, last_seg._end, c.text, c.comment)
@@ -715,7 +701,7 @@ function M.func(input, env)
         return true
     end
 
-    --  非分组路径 
+    -- ===== 非分组路径 =====
     if not do_group then
         local idx = 0
         for cand in input:iter() do
@@ -769,7 +755,7 @@ function M.func(input, env)
         return
     end
 
-    --  分组路径（2..6 码）
+    -- ===== 分组路径（2..6 码）=====
     local idx2, mode, grouped_cnt = 0, "unknown", 0
     local window_closed = false
     local group2_others = {}

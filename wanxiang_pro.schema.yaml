@@ -35,7 +35,8 @@ switches:
   - name: chaifen_switch               #开启后在候选的注释里面实时显示辅助码的拆分提醒优先级高于普通辅助提醒，不开启则采用系统配置，快捷键配套ctrl+c,影响的是comment_format，归属：super_comment.lua
     states: [ 拆分关, 拆分开 ]
   - name: charset_filter               #字符集过滤，默认开启8105通规显示，即小字集，可通过开关实时开启全字集，快捷键配套ctrl+g,归属：super_filter.lua
-    states: [ 小字集, 大字集 ]
+    states: [ 大字集, 小字集 ]
+    reset: 1
   - name: super_tips                   #开启后在输入编码后面的提示区显示实时的提示数据，受tips数据库影响，表情、翻译、车牌、符号等对应关系数据，并可实现句号上屏，不开启则默认，影响的是segment.prompt参数，归属：super_tips.lua
     states: [ 提示关, 提示开 ]
     reset: 1
@@ -48,23 +49,15 @@ switches:
     states: [ 简体, 通繁, 港繁, 臺繁 ]
   - name: char_priority                #多体现在编码重合但候选有单字或者多字的情况`引导的辅码查词时是否单字优先，全拼常见，类似于特定编码情况下、反查状态下的调序能力。归属：super_lookup.lua
     states: [词组先, 单字先]
-  - options: [ mixed, zh_only, en_only ]
-    states: [ 混合输入, 仅中文, 仅英文 ]
+
 
 # 输入引擎
 engine:
   processors:
-    - lua_processor@*select_character      #以词定字，默认左中括号上屏一个词的前一个字，右中括号上屏一个词的后一个字
+    - lua_processor@*super_processor       #KP小键盘、字母选词、符号快打、超强分词、重复限制、退格限制、声调回退、以词定字
     - lua_processor@*partial_commit        #通过ctrl+1~0局部提交10个字以内的句子的前几个字（一般为正确的前几个）使用时要遵循合理的分词结构能促进后续编码打出正确的词汇
-    - lua_processor@*letter_selector       #在N模式R模式下输入数字被视为编码，那么如何上屏呢，现在除了方向键还提供qwertyuio对照1-9来选词
-    - lua_processor@*tone_fallback         #声调辅助回退，当你输入声调数字错误时，继续输入正确的而不用回退删除
     - lua_processor@*super_sequence*P      #手动排序，高亮候选 ctrl+j左移动 ctrl+k 右移动 ctrl+l 移除位移  ctrl+p 置顶
-    - lua_processor@*quick_symbol_text     #快符引导以及重复上屏，配合quick_symbol_text顶层配置清单定义扩展按键
     - lua_processor@*super_tips            #超级提示模块：表情、简码、翻译、化学式、等等靠你想象
-    - lua_processor@*limit_repeated        #用于限制最大候选长度以及最大重复输入声母编码长度，避免性能异常
-    - lua_processor@*backspace_limit       #防止连续 Backspace 在编码为空时删除已上屏内容
-    - lua_processor@*kp_number_processor   #管理主键盘小键盘的数字处理逻辑，有输入中数字不上屏和数字一直不上屏设置可选
-    - lua_processor@*super_segmentation    #通过双击分词符号触发重新分词，并在持续输入分词符号时，能在预设方式之间循环，用于应对类似自然码：必输 必须是 为相同编码导致的必输前置的问题
     - ascii_composer                       #处理英文模式及中英文切换
     - recognizer                           #与 matcher 搭配，处理符合特定规则的输入码，如网址、反查等 tags
     - key_binder                           #在特定条件下将按键绑定到其他按键，如重定义逗号、句号为候选翻页、开关快捷键等
@@ -96,31 +89,26 @@ engine:
     - table_translator@chengyu             #简码成语词汇表导入
     - table_translator@wanxiang_english    #英文词汇表导入
     - table_translator@wanxiang_mixedcode  #混合编码词汇表导入
-    - table_translator@wanxiang_reverse    #挂接部件组字和笔画反查
+    - reverse_lookup_translator@wanxiang_reverse    #挂接部件组字和笔画反查
     - script_translator@user_dict_set      #自造词之使用词汇入口
     - script_translator@add_user_dict      #自造词之制造词汇入口
   filters:
-    - reverse_lookup_filter@radical_reverse_lookup  #部件拆字滤镜，放在super_comment前面，进一步被超级注释处理以获得拼音编码的提示
     - lua_filter@*auto_phrase                       #comment前，无感造词，关闭调频的时候将汉字写入次翻译器，当没有英文候选的时候追加\上屏可完成英文造词
     - lua_filter@*super_lookup                      #comment前，字词输入中反查辅助筛选
     - lua_filter@*super_filter                      #comment前,相关功能见Lua文件
     - lua_filter@*super_english                     #comment前,负责英文方案及中英混输中英文单词格式化，语句流，自动加空格等策略
     - lua_filter@*super_comment_preedit             #OpenCC前，超级注释模块、超级preedit，支持错词提示、辅助码显示，部件组字读音注释，有声调、无声调全拼编码的转换，支持个性化配置和关闭相应的功能，详情搜索super_comment_preedit进行详细配置
-    - simplifier@emoji                              #Emoji滤镜
-    - simplifier@s2t                                #简繁切换通繁
-    - simplifier@s2tw                               #简繁切换台繁
-    - simplifier@s2hk                               #简繁切换港繁
-    - simplifier@chinese_english                    #中英翻译滤镜
+    - lua_filter@*super_replacer                    #OpenCC替代器，更灵活的处理方式，更自由的自定义方式
     - lua_filter@*super_sequence*F                  #手动排序，对高亮候选 ctrl+j左移动 ctrl+k 右移动 ctrl+0 移除位移
     - uniquifier                                    #去重
 
 grammar:
   language: wanxiang-lts-zh-hans
-  collocation_max_length: 6
-  collocation_min_length: 3
+  collocation_max_length: 7
+  collocation_min_length: 2
   collocation_penalty: -10
   non_collocation_penalty: -20
-  weak_collocation_penalty: -45
+  weak_collocation_penalty: -35
   rear_penalty: -12
 
 super_comment:                  # 超级注释模块，子项配置 true 开启，false 关闭
@@ -134,15 +122,107 @@ tips:
   # 可选项为：偏旁，符号，化学式，时间，符号，组字，翻译，表情，货币，车牌
   disabled_types: []
 
-#在8105基础上你可以通过黑白名单微调你自己的字符集过滤清单，主数据库位于lua/charset.bin不可编辑
-charsetlist: []
-charsetblacklist: []
-
 # 给 kp_number_processor 用的小键盘模式，能自动读取recognizer下面正则与之功能对齐
 kp_number_mode: auto
   #小键盘数字处理逻辑
   #  "compose" : 小键盘数字始终不上屏参与编码
   #  "auto"    : 输入中 push，空闲时 commit（默认）
+
+super_replacer:
+    db_name: lua/replacer
+    delimiter: "|"
+    comment_format: "〔%s〕"
+    chain: true   #true表示流水线作业，上一个option产出交给下一个处理，典型的s2t>t2hk=s2hk，false就是并行，直接用text转换
+    types:
+      # 场景1：输入 '哈哈' -> 变成 '1.哈哈 2.😄'
+      - option: emoji           # 开关名称与上面开关名称保持一致
+        mode: append            # 新增候选append 替换原候选replace 替换注释comment
+        comment_mode: none      # 注释模式: "append"(原候选注释继承), "text"(原候选文本放在注释), "none"(空，默认)
+        tags: [abc]             # 生效的tag
+        prefix: "_em_"          # 前缀用于区分同一个数据库的不同用途数据
+        files:
+          - lua/data/emoji.txt
+      # 场景2：输入 'hello' -> 显示 'hello 〔你好 | 哈喽〕'
+      - option: chinese_english
+        mode: append        # <--- 添加注释模式
+        comment_mode: none
+        tags: [abc]
+        prefix: "_en_"
+        files:
+          - lua/data/english_chinese.txt
+          - lua/data/chinese_english.txt
+      # 场景3：用于常驻的直接替换 option: true
+      - option: true
+        mode: append         # <--- 新增候选模式
+        comment_mode: none
+        tags: [abc]
+        prefix: "_ot_"
+        files:
+          - lua/data/others.txt
+      # 场景4：用于简繁转换的直接替换
+      - option: [ s2t, s2hk, s2tw ]   #后面依赖这条流水线有一个开关为true这条流水线就能工作
+        mode: replace         # <--- 替换原候选模式
+        comment_mode: append
+        sentence: true        # <--- 句子级别替换
+        tags: [abc]
+        prefix: "_s2t_"
+        files:
+          - lua/data/STCharacters.txt
+          - lua/data/STPhrases.txt
+      - option: s2hk
+        mode: replace         # <--- 替换原候选模式
+        comment_mode: append
+        sentence: true        # <--- 句子级别替换
+        tags: [abc]
+        prefix: "_s2hk_"
+        files:
+          - lua/data/HKVariants.txt
+          - lua/data/HKVariantsRevPhrases.txt
+      - option: s2tw
+        mode: replace         # <--- 替换原候选模式
+        comment_mode: append
+        sentence: true        # <--- 句子级别替换
+        tags: [abc]
+        prefix: "_s2tw_"
+        files:
+          - lua/data/TWVariants.txt
+          - lua/data/TWVariantsRevPhrases.txt
+
+# 字符集过滤lua
+# a,通用规范汉字表
+# b,GB2312,
+# g,GBK,
+# T,Big5,(台港澳常用)
+# j,简体,OpenCC (t2s)
+# f,通用繁体,OpenCC (s2t)
+# h,香港繁体, OpenCC (s2hk)
+# t,台湾繁体, OpenCC (s2tw)
+# u,基本区,U+4E00 - U+9FFF
+# A-I,扩展 A-I 区,U+3400 及各扩展区 (支持到 Ext-I)
+# c,兼容区汉字
+# 你可以通过黑白名单微调你自己每个开关下面的字符集过滤清单，主数据库位于lua/charset.reverse.bin不可编辑
+# 你可以按上面提到的规则代号在base处填写上基础集，还可以在每一个开关的开白名单设置微调数据，就像默认添加的字符集过滤在8105基础上新增了一些
+# 你可以定义多个开关，多个开启状态的开关求并集，比如charset_filter开着，s2hk也开着，那么就会显示这两个集合的所有汉字
+# 优雅的地方在于s2hk开着，charset_filter关着 我们照样能使用 港繁能用到的所有字，是真正的本体，无关字会被过滤，而当都开着则是享受简体转换成繁体的后的结果
+# 这个设计真正的兼容了简繁转换与字符集过滤的矛盾，还能满足用户多种自定义需求，你可以在开关增加类别，并在charset下面新增option类去选择按照字区去过滤，等多种组合方式
+charset:
+  - option: charset_filter
+    base: a  #可以填入多个类别如aj
+    addlist:
+      - "诶濛硷氽尛躝〇冇吔咗囧屌鲶芶咲畑垅𰻝𰻞"
+    blacklist: []
+  - option: s2t
+    base: f
+    addlist: []
+    blacklist: []
+  - option: s2hk
+    base: h
+    addlist: []
+    blacklist: []
+  - option: s2tw
+    base: t
+    addlist: []
+    blacklist: []
 
 #shijian:仅仅作为提示使用，编码已经写死，引导键可以在key_binder下修改前缀
 #时间：osj 或者 /sj
@@ -401,7 +481,7 @@ wanxiang_english:
   user_dict: en
   enable_completion: true
   enable_sentence: true
-  initial_quality: 2
+  initial_quality: 2.1
   comment_format:  #这里很重要如果残留带声调字母，剩余编码提示计算出错引发程序崩溃
     - xform/^~.+$//
   #英文自动加空格，除关闭外共有3种模式可供选择
@@ -410,70 +490,32 @@ wanxiang_english:
   #支持设置延时销毁加空格状态，单位秒,0不超时，大于0为超时时间，极大的保证了连续输入的体验。
   english_spacing: smart
   spacing_timeout: 5
+
 wanxiang_mixedcode:
   dictionary: wanxiang_mixedcode
   db_class: stabledb
   enable_completion: true
   enable_sentence: false
-  initial_quality: 2.1
+  initial_quality: 2
   comment_format:  #这里很重要如果残留带声调字母，剩余编码提示计算出错引发程序崩溃
     - xform/^~.+$//
-
-# Emoji
-emoji:
-  option_name: emoji
-  opencc_config: emoji.json
-  tags: [abc]
-  inherit_comment: false
-
-#中文转英文
-chinese_english:
-  option_name: chinese_english
-  opencc_config: chinese_english.json
-  tips: char
-  inherit_comment: false
-
-# 简繁切换
-s2t:
-  option_name: s2t
-  opencc_config: s2t.json  # s2t.json | s2hk.json | s2tw.json | s2twp.json
-  tips: none               # 转换提示: all 都显示 | char 仅单字显示 | none 不显示。
-  tags: [ abc ]  # 限制在对应 tag，不对其他如反查的内容做简繁转换
-
-s2hk:
-  opencc_config: s2hk.json
-  option_name: s2hk
-  tags: [abc]
-
-s2tw:
-  opencc_config: s2tw.json
-  option_name: s2tw
-  tags: [abc]
 
 # 部件拆字反查
 wanxiang_reverse:
   tag: wanxiang_reverse
   dictionary: wanxiang_reverse
-  db_class: stabledb
-  enable_user_dict: false
-  enable_sentence: false
   prefix: "`"  # 反查前缀（反查时前缀会消失），与 recognizer/patterns/wanxiang_reverse 匹配
   tips: "〔反查：拆分|笔画〕"
-
-# 部件拆字滤镜
-radical_reverse_lookup:
-  tags: [ wanxiang_reverse ]  #起作用tag范围
-  overwrite_comment: true   #是否覆盖其他提示
-  dictionary: wanxiang_pro      #带音调的词典
 
 wanxiang_lookup: #设置归属于super_lookup.lua
   tags: [ abc ]  # 检索当前tag的候选
   key: "`"       # 输入中反查引导符，要添加到 speller/alphabet
   lookup: [ wanxiang_reverse ] #反查滤镜数据库，万象都合并为一个了
-  data_source: ['comment', 'db']
-  #data_source: ['db', 'comment']
-  #用来配置你的反查数据来自哪里，注释comment：即词库携带的辅助编码，数据库db：即反查方案携带的两分、多分、笔画
-  #谁在前哪种权重高比如 身db dian即dm，深comment dm 就能让相应的候选排在前面
+  enable_tone: true  #启用声调反查
+  data_source: ['aux', 'db']
+  #data_source: ['db', 'aux']
+  #用来配置你的反查数据来自哪里，注释aux：即词库携带的辅助编码，数据库db：即反查方案携带的两分、多分、笔画
+  #谁在前哪种权重高比如 身db dian即dm，深aux dm 就能让相应的候选排在前面
   #但注释在前有时候与笔画的感知会有一定冲突，可针对习惯使用一类数据库即可
 
 # 处理符合特定规则的输入码，如网址、反查
@@ -485,7 +527,7 @@ recognizer:
     add_user_dict: "^``[A-Za-z/`']*$"      #自造词
     unicode: "^U[a-f0-9]+"              # 脚本将自动获取第 2 个字符 U 作为触发前缀，响应 lua_translator@unicode，输出 Unicode 字符
     number: "^R[0-9]+[.]?[0-9]*"        # 脚本将自动获取第 2 个字符 R 作为触发前缀，响应 lua_translator@number_translator，数字金额大写
-    sjc: "^.rc\\d+[-+=op]?$"
+    sjc: "^[/o]rc\\d+[-+=op]?$"
     yr1: "^N0[1-9]?0?[1-9]?"
     yr2: "^N1[02]?0?[1-9]?"
     yr3: "^N0[1-9]?[1-2]?[1-9]?"
@@ -496,7 +538,7 @@ recognizer:
     nyr2: "^N20?[0-9]?[0-9]?[0-1]?[0-9]?[0-9]?[0-9]?"
     calculator: "^V.*$"                 #计算器功能引导
     email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"                            # email @ 之后不上屏
-    url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"  # URL
+    url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$"  # URL
 
 # 标点符号
 # punctuator 下面有三个子项：
@@ -562,7 +604,9 @@ key_binder:
     - { when: has_menu, accept: "Control+g", toggle: charset_filter }
     - { when: composing, accept: "Control+g", toggle: charset_filter }
 #通过快捷键Shift+space开启输入模式切换
-    - { when: always, accept: "Shift+space", toggle: zh_only }
+    #- { when: always, accept: Shift+space, select: wanxiang }  #直接跳转指定方案
+    #- { when: always, accept: Shift+space, select: wanxiang_pro }  #直接跳转指定方案
+    - { when: always, accept: Shift+space, select: .next }  #下一个方案
 # 使用 tab 在不同音节之间跳转
     - { when: has_menu, accept: "Tab", send: "Control+Right" }
     - { when: composing, accept: "Tab", send: "Control+Right" }

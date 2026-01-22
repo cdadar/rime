@@ -1,5 +1,6 @@
 patch:
   schema_list:
+    - schema: wanxiang_pro
     - schema: double_pinyin_flypy
     - schema: rime_ice
 

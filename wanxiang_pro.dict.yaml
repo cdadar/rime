@@ -21,5 +21,7 @@ import_tables:
   - dicts/duoyin.pro        #兼容词库，是基础词库的扩充，收录了多场景多种读音的词组
   - dicts/shici.pro         #诗词
   - dicts/diming.pro        #地名
-#  - dicts/wuzhong.pro       #物种多样性
+  - Cn_Dicts/Zhwiki
+  - Cn_Dicts/Bible
+#  - Dicts/Wuzhong.Pro       #物种多样性
 ...

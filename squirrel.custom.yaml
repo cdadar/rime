@@ -4,20 +4,28 @@ patch:
     ascii_mode: true
   app_options/com.apple.Xcode:
     ascii_mode: true
+    ascii_esc: true
   app_options/com.jetbrains.pycharm:
     ascii_mode: true
+    ascii_esc: true
   app_options/com.jetbrains.WebStorm:
     ascii_mode: true
+    ascii_esc: true
   app_options/com.google.android.studio:
     ascii_mode: true
+    ascii_esc: true
   app_options/com.jetbrains.CLion:
     ascii_mode: true
+    ascii_esc: true
   app_options/com.jetbrains.datagrip:
     ascii_mode: true
+    ascii_esc: true
   app_options/com.jetbrains.goland:
     ascii_mode: true
+    ascii_esc: true
   app_options/com.jetbrains.intellij:
     ascii_mode: true
+    ascii_esc: true
   app_options/com.googlecode.iterm2:
     ascii_mode: true
   app_options/com.alfredapp.Alfred: {}

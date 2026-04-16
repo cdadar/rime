@@ -1,31 +1,41 @@
-# example squirrel.custom.yaml
 patch:
-  app_options/org.gnu.Emacs:
-    ascii_mode: true
-  app_options/com.apple.Xcode:
-    ascii_mode: true
-    ascii_esc: true
-  app_options/com.jetbrains.pycharm:
-    ascii_mode: true
-    ascii_esc: true
-  app_options/com.jetbrains.WebStorm:
-    ascii_mode: true
-    ascii_esc: true
-  app_options/com.google.android.studio:
-    ascii_mode: true
-    ascii_esc: true
-  app_options/com.jetbrains.CLion:
-    ascii_mode: true
-    ascii_esc: true
-  app_options/com.jetbrains.datagrip:
-    ascii_mode: true
-    ascii_esc: true
-  app_options/com.jetbrains.goland:
-    ascii_mode: true
-    ascii_esc: true
-  app_options/com.jetbrains.intellij:
-    ascii_mode: true
-    ascii_esc: true
-  app_options/com.googlecode.iterm2:
-    ascii_mode: true
-  app_options/com.alfredapp.Alfred: {}
+  app_options:
+    org.gnu.Emacs:
+      ascii_mode: true
+
+    com.apple.Xcode:
+      ascii_mode: true
+      ascii_esc: true
+
+    com.jetbrains.pycharm:
+      ascii_mode: true
+      ascii_esc: true
+
+    com.jetbrains.WebStorm:
+      ascii_mode: true
+      ascii_esc: true
+
+    com.google.android.studio:
+      ascii_mode: true
+      ascii_esc: true
+
+    com.jetbrains.CLion:
+      ascii_mode: true
+      ascii_esc: true
+
+    com.jetbrains.datagrip:
+      ascii_mode: true
+      ascii_esc: true
+
+    com.jetbrains.goland:
+      ascii_mode: true
+      ascii_esc: true
+
+    com.jetbrains.intellij:
+      ascii_mode: true
+      ascii_esc: true
+
+    com.googlecode.iterm2:
+      ascii_mode: true
+
+    com.alfredapp.Alfred: {}

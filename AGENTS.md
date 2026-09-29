@@ -39,6 +39,9 @@ cd ~/project/source/plum/package/amzxyz/rime_wanxiang \
 
 ## 已知坑
 
+- `*.custom.yaml` 里的 patch 可能**静默失效**：只要 `__include:` 指向不存在的节点，整份 patch 会被丢掉，
+  不报错、部署也正常，只有部署产物里能看出来。验证：`grep <你改的键> build/<方案>.schema.yaml`。
+  （2026-09-29 修过一次：双拼方案因 `__include: octagram` 导致 grammar 等全部没生效。）
 - `.git/index` 变成 0 字节时（典型诱因：被中断的 `git pull`），`git status` 和 `git reset`
   都会报 `index file smaller than expected`；工作区没丢，修复：
   `rm .git/index && git read-tree HEAD`。

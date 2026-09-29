@@ -5,6 +5,13 @@ patch:
   # @before 5 是 filters 列表下标（0 起），上游往前面插 filter 时要跟着改
   engine/filters/@before 5: lua_filter@*long_word_filter
 
+  # 首字母简拼（nh → 你好）。上游注释掉了这条，注释里写明：开启后 3 个字母时 kj'x 会变成 k'jx
+  speller/algebra/+:
+    - "abbrev/^(.).+$/$1/"
+
+  # switches 下标（0 起）：0 ascii_mode 1 ascii_punct 2 traditionalization 3 emoji
+  switches/@3/reset: 0            # emoji 默认关（上游默认开，emoji 会占候选位）
+
   # 语法模型（八股文 / librime-octagram）
   # language 对应 Rime 目录下的 <name>.gram（由 grammar 配方从 RIME-LMDG releases/LTS 下载）
   # 下面这套参数就是雾凇 grammar 配方（others/recipes/grammar）用的值，也就是 RIME-LMDG 推荐值

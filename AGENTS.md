@@ -36,7 +36,8 @@ cd ~/project/source/plum/package/iDvel/ice \
   双拼 2026-09-29 用 `engine/filters/@before 5` 补上（下标 0 起，上游往前插 filter 时要跟着改）。
 - `*.custom.yaml` 里的 patch 可能**静默失效**：只要 `__include:` 指向不存在的节点，整份 patch 会被丢掉，
   不报错、部署也正常，只有部署产物里能看出来。验证：`grep <你改的键> build/<方案>.schema.yaml`。
-  （2026-09-29 修过一次：双拼方案因 `__include: octagram` 导致 grammar 等全部没生效。）
+  踩过三次：`__include: octagram`（雾凇/万象都没有这个节点）、`algebra_flypy`（真名是
+  `algebra_double_pinyin_flypy`，`others/双拼补丁示例/` 里就是错名字）。
 - `.git/index` 变成 0 字节时（典型诱因：被中断的 `git pull`），`git status` 和 `git reset`
   都会报 `index file smaller than expected`；工作区没丢，修复：
   `rm .git/index && git read-tree HEAD`。

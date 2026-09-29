@@ -1,9 +1,11 @@
-# radical_pinyin.custom.yaml
+# radical.custom.yaml — radical 方案的补丁，内容同 radical_pinyin.custom.yaml
+# 节点名在 radical_pinyin.schema.yaml 里，是 algebra_double_pinyin_flypy（不是 algebra_flypy）。
 patch:
   speller/algebra:
-    __include: radical_pinyin.schema.yaml:/algebra_flypy
-    # __include: radical_pinyin.schema.yaml:/algebra_double_pinyin
-    # __include: radical_pinyin.schema.yaml:/algebra_mspy
-    # __include: radical_pinyin.schema.yaml:/algebra_abc
-    # __include: radical_pinyin.schema.yaml:/algebra_ziguang
-    # __include: radical_pinyin.schema.yaml:/algebra_sogou
+    __include: radical_pinyin.schema.yaml:/algebra_double_pinyin_flypy
+    # __include: radical_pinyin.schema.yaml:/algebra_rime_ice             # 全拼
+    # __include: radical_pinyin.schema.yaml:/algebra_double_pinyin        # 自然码双拼
+    # __include: radical_pinyin.schema.yaml:/algebra_double_pinyin_mspy   # 微软双拼
+    # __include: radical_pinyin.schema.yaml:/algebra_double_pinyin_sogou  # 搜狗双拼
+    # __include: radical_pinyin.schema.yaml:/algebra_double_pinyin_abc    # 智能 ABC
+    # __include: radical_pinyin.schema.yaml:/algebra_double_pinyin_ziguang # 紫光双拼

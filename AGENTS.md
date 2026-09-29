@@ -25,14 +25,15 @@ cd ~/project/source/plum/package/iDvel/ice \
 - 文件归属：iDvel/rime-ice → `rime_ice.*`、`double_pinyin*`、`en_dicts/`、`lua/*`、`opencc/*`。
   万象的文件 2026-09-29 已全删（`wanxiang_*`、`dicts/`、`lua/super_*`、`custom/`、`README.md`）。
 - `*.gram` 语法模型不进 git（已 ignore），靠 grammar 配方重下；仓库里不放几百 MB 的模型。
-- `*.custom.yaml` 末尾带 `# Rx: <配方>` 标记的 `__patch:` 块是 plum 配方写的，重跑配方会替换；
-  和手写的 `patch:` 参数重复时定不好谁生效，要按自己的值就得删掉那块。
+- `*.custom.yaml` 末尾由配方追加的 `__patch:` 块写在*文件根层*（不是 `patch:` 里面），Rime 不读，
+  等于死块；和手写参数重复时删掉它。细节见 `README.org`。
 - git 提交 / 推送由用户手动做，agent 不 push。
 
 ## 已知坑
 
 - 双拼方案的 filters 不能照抄全拼：`v_filter` 依赖全拼的 `v`=ü，而双拼里 `v`=zh，会让 `va/vi/vu`
-  这类码的候选乱序（上游双拼没挂它是对的）；`long_word_filter`（长词优先）则只有全拼挂了，双拼要补得自己 patch。
+  这类码的候选乱序（上游双拼没挂它是对的）；`long_word_filter`（长词优先）上游只给全拼挂了，
+  双拼 2026-09-29 用 `engine/filters/@before 5` 补上（下标 0 起，上游往前插 filter 时要跟着改）。
 - `*.custom.yaml` 里的 patch 可能**静默失效**：只要 `__include:` 指向不存在的节点，整份 patch 会被丢掉，
   不报错、部署也正常，只有部署产物里能看出来。验证：`grep <你改的键> build/<方案>.schema.yaml`。
   （2026-09-29 修过一次：双拼方案因 `__include: octagram` 导致 grammar 等全部没生效。）
@@ -42,9 +43,11 @@ cd ~/project/source/plum/package/iDvel/ice \
 
 ## 当前状态
 
-- rime_ice 已同步到上游 `3aea6d3`（2026-09-25），已部署（2026-09-29 16:15），已提交未推送。
+- rime_ice 已同步到上游 `3aea6d3`（2026-09-25），已部署（2026-09-29 17:06），已推送到 origin/master。
 - 语法模型 `wanxiang-lts-zh-hans.gram`（413MB）不再进 git，靠 grammar 配方重下；万象包本身已清掉，
   但两个方案都还在用它。
 - 两个方案的 grammar 参数各自写在 `*.custom.yaml` 里；双拼那套 2026-09-29 起才真正生效
   （此前 `__include: octagram` 让整份 patch 失效）。验证：`grep grammar build/double_pinyin_flypy.schema.yaml`。
 - macOS 字体在 `squirrel.custom.yaml`（文楷 13）；`default.custom.yaml` 里那份只给 linux/windows 前端。
+- 仓库里还留着一批 rime 预置死方案（`luna_pinyin*`/`cangjie5*`/`bopomofo*`/`stroke*`/`terra_pinyin*` 等，
+  都不在 `schema_list` 里，≈16M），未清理。

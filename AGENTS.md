@@ -39,6 +39,8 @@ cd ~/project/source/plum/package/amzxyz/rime_wanxiang \
 
 ## 已知坑
 
+- 双拼方案的 filters 不能照抄全拼：`v_filter` 依赖全拼的 `v`=ü，而双拼里 `v`=zh，会让 `va/vi/vu`
+  这类码的候选乱序（上游双拼没挂它是对的）；`long_word_filter`（长词优先）则只有全拼挂了，双拼要补得自己 patch。
 - `*.custom.yaml` 里的 patch 可能**静默失效**：只要 `__include:` 指向不存在的节点，整份 patch 会被丢掉，
   不报错、部署也正常，只有部署产物里能看出来。验证：`grep <你改的键> build/<方案>.schema.yaml`。
   （2026-09-29 修过一次：双拼方案因 `__include: octagram` 导致 grammar 等全部没生效。）

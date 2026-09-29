@@ -1,8 +1,6 @@
 # Rime custom
 # encoding: utf-8
 patch:
-  switches/@0/reset: 1
-
   # 语法模型（八股文 / librime-octagram）
   # language 对应 Rime 目录下的 <name>.gram，模型缺了就不生效
   grammar:

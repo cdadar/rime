@@ -25,8 +25,10 @@ cd ~/project/source/plum/package/iDvel/ice \
 - 文件归属：iDvel/rime-ice → `rime_ice.*`、`double_pinyin*`、`en_dicts/`、`lua/*`、`opencc/*`。
   万象的文件 2026-09-29 已全删（`wanxiang_*`、`dicts/`、`lua/super_*`、`custom/`、`README.md`）。
 - `*.gram` 语法模型不进 git（已 ignore），靠 grammar 配方重下；仓库里不放几百 MB 的模型。
-- `*.custom.yaml` 末尾由配方追加的 `__patch:` 块是 plum 生成的（写在文件根层，内容是 `patch/+:`，
-  即把配方参数追加到本文件的 `patch` 里）；重跑配方会替换。和手写参数重复时删掉它。细节见 `README.org`。
+- `*.custom.yaml` 末尾由配方追加的 `__patch:` 块是 plum 写的（`plum/scripts/recipe.sh` 的 `patch_file()`；
+  根层 `patch/+:`，往本文件 `patch` 再叠一层，重跑同一配方按 `# Rx:` 标记先删旧块再写）。这层是活的且
+  *优先级高于手写的 `patch:`*：同名键以它为准——实测那份会把 `schema_list` 从两项顶成一项，方案选单里
+  少一个方案。所以配方跑完要把值搬进 `patch:` 再删块。细节见 `README.org`。
 - git 提交 / 推送由用户手动做，agent 不 push。
 
 ## 已知坑
@@ -44,11 +46,11 @@ cd ~/project/source/plum/package/iDvel/ice \
 
 ## 当前状态
 
-- rime_ice 已同步到上游 `3aea6d3`（2026-09-25），已部署（2026-09-29 17:06），已推送到 origin/master。
+- rime_ice 已同步到上游 `3aea6d3`（2026-09-25），已部署（鼠须管），已推送到 origin/master。
 - 语法模型 `wanxiang-lts-zh-hans.gram`（413MB）不再进 git，靠 grammar 配方重下；万象包本身已清掉，
   但两个方案都还在用它。
 - 两个方案的 grammar 参数各自写在 `*.custom.yaml` 里；双拼那套 2026-09-29 起才真正生效
   （此前 `__include: octagram` 让整份 patch 失效）。验证：`grep grammar build/double_pinyin_flypy.schema.yaml`。
 - macOS 字体在 `squirrel.custom.yaml`（文楷 13）；`default.custom.yaml` 里那份只给 linux/windows 前端。
-- 仓库里还留着一批 rime 预置死方案（`luna_pinyin*`/`cangjie5*`/`bopomofo*`/`stroke*`/`terra_pinyin*` 等，
-  都不在 `schema_list` 里，≈16M），未清理。
+- 仓库里还留着一批 rime 预置死方案（`luna_pinyin*`/`cangjie5*`/`bopomofo*`/`stroke*`/`terra_pinyin*`/
+  `radical.schema.yaml`+`radical_flypy.dict.yaml` 等，都不在 `schema_list` 里，≈7M），未清理。

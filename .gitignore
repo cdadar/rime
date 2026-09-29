@@ -6,6 +6,7 @@ dist/
 build/
 sync/
 *.userdb/
+*.gram
 installation.yaml
 user.yaml
 !others/**/*.custom.yaml

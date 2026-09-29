@@ -15,8 +15,6 @@ patch:
   switcher/hotkeys:
     - Control+grave
 
-  # translator/dictionary: pinyin_simp.extended  # (※4) 并继续使用 pinyin_simp 字典
-
   key_binder/bindings/+:
     # emacs_editing:
     - { when: composing, accept: Control+p, send: Up }

@@ -25,8 +25,8 @@ cd ~/project/source/plum/package/iDvel/ice \
 - 文件归属：iDvel/rime-ice → `rime_ice.*`、`double_pinyin*`、`en_dicts/`、`lua/*`、`opencc/*`。
   万象的文件 2026-09-29 已全删（`wanxiang_*`、`dicts/`、`lua/super_*`、`custom/`、`README.md`）。
 - `*.gram` 语法模型不进 git（已 ignore），靠 grammar 配方重下；仓库里不放几百 MB 的模型。
-- `*.custom.yaml` 末尾由配方追加的 `__patch:` 块写在*文件根层*（不是 `patch:` 里面），Rime 不读，
-  等于死块；和手写参数重复时删掉它。细节见 `README.org`。
+- `*.custom.yaml` 末尾由配方追加的 `__patch:` 块是 plum 生成的（写在文件根层，内容是 `patch/+:`，
+  即把配方参数追加到本文件的 `patch` 里）；重跑配方会替换。和手写参数重复时删掉它。细节见 `README.org`。
 - git 提交 / 推送由用户手动做，agent 不 push。
 
 ## 已知坑

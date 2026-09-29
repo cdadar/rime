@@ -9,8 +9,9 @@
 | =double_pinyin_flypy=  | 雾凇（iDvel/rime-ice）| 小鹤双拼（主力）               |
 | =rime_ice=             | 雾凇（iDvel/rime-ice）| 雾凇拼音（全拼），与双拼共用词库 |
 
-语法模型（八股文 / librime-octagram）：两个方案都用 =wanxiang-lts-zh-hans.gram=，参数写在各自的
-=*.custom.yaml= 里，各自调。模型文件不进 git，用 grammar 配方下载（见下）。
+语法模型（八股文 / librime-octagram）：两个方案都用 =wanxiang-lts-zh-hans.gram=，来自 RIME-LMDG 的
+LTS release（grammar 配方下载，见下）。参数写在各自的 =*.custom.yaml= 里；双拼那份用的就是配方 /
+RIME-LMDG 的推荐值，改的时候两边一起改。
 
 ** 更新
 
@@ -85,7 +86,7 @@ ibus
 =rime_ice.dict.yaml= 被就地改过（启用 =cn_dicts/41448= 大字表、追加 =cn_dicts/zhwiki= 和
 =cn_dicts/bible=），plum 每次都会把它覆盖回去，更新后要重新打这三行。
 
-方案 =*.custom.yaml= 末尾由配方追加的 =__patch:= 块（带 =# Rx:= 标记）是 plum 写的，重跑配方会替换，
-手改会被覆盖。它写在*文件根层*（不是 =patch:= 里面），Rime 根本不读，等于死块 —— 2026-09-29 双拼
-那份已删。=radical_pinyin.custom.yaml=、=melt_eng.custom.yaml= 里还有同类块，不影响使用，
-下次改它们时可以顺手删。
+方案 =*.custom.yaml= 末尾由配方追加的 =__patch:= 块（带 =# Rx:= 标记）是 plum 生成的：写在文件根层，
+内容是把配方参数追加到本文件的 =patch= 里。重跑配方会替换，手改会被覆盖。2026-09-29 双拼那份已删
+（当时整份 patch 失效的真凶是同文件里的 =__include: octagram=，指向不存在的节点）；
+=radical_pinyin.custom.yaml=、=melt_eng.custom.yaml= 里还有同类块。

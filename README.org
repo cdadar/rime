@@ -51,7 +51,7 @@ bash ~/project/source/plum/rime-install iDvel/rime-ice:others/recipes/grammar:sc
 
 *** 为什么要先 =cd= 进包目录
 
-plum 的 =scripts/install-packages.sh= 读 recipe 时是这么写的：
+plum 的 =scripts/recipe.sh= 读 recipe 时是这么写的：
 =file_patterns=( $(cat recipe | ...) )=。bash 会对命令替换的结果做路径展开，这个展开发生在
 *调用时的当前目录*，不是在包目录。所以在 =~/Library/Rime= 里跑，=lua/*.*=、=cn_dicts/*.*=
 这些通配符只会匹配到本地已存在的文件 —— 上游 *新增* 的文件会被静默漏掉（还会刷一屏
@@ -88,7 +88,8 @@ ibus
 =cn_dicts/bible=），plum 每次都会把它覆盖回去，更新后要重新打这三行。
 
 配方（=config=/=grammar=）跑完会在文件末尾追加一个根层 =__patch:= 块（带 =# Rx:= 标记），内容是
-把配方参数追加到本文件的 =patch= 里。*跑完要删掉它*：值已经直写在 =patch:= 里，留两份重复
-容易走样；其中最坑的是 =default.custom.yaml= 那份——它会往 =schema_list= 重复追加
-=double_pinyin_flypy=，方案选单里多出一个重名方案。删掉后重跑配方会再生成，属于 plum 的正常行为。
+=patch/+:=，即往本文件的 =patch= 再叠一层。*这层是活的，而且优先级更高*：同名键以它为准，手写的值
+会被顶掉——实测 =default.custom.yaml= 那份会把 =schema_list= 从「小鹤 + 雾凇」两项顶成只剩小鹤一项，
+方案选单里直接少了雾凇。所以*跑完要删掉它*，前提是配方参数已直写在 =patch:= 里（recipe 只负责生成；
+删掉后重跑配方会再生成，属于 plum 的正常行为）。验证：部署后看 =build/default.yaml= 的 =schema_list=。
 （=radical_pinyin.custom.yaml=、=melt_eng.custom.yaml= 的值已就位，只有换拼音方案时才需要重跑 =config=。）

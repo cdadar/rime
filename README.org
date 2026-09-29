@@ -1,17 +1,16 @@
 * 个人的 rime 配置
 
-主力是鼠须管（macOS）。两个小鹤双拼（flypy）键位方案（万象 + 小鹤双拼），另挂一个全拼的雾凇。
+主力是鼠须管（macOS）。一个双拼方案（小鹤）+ 一个全拼方案（雾凇），都用万象的 LTS 语法模型。
 
 ** 方案
 
-| 方案                   | 来源                  | 说明                         |
-|------------------------+-----------------------+------------------------------|
-| =wanxiang_pro=         | 万象（amzxyz）        | 万象词库 + 语法模型 + 辅助码 |
-| =double_pinyin_flypy=  | 雾凇（iDvel/rime-ice）| 小鹤双拼                     |
+| 方案                   | 来源                  | 说明                           |
+|------------------------+-----------------------+--------------------------------|
+| =double_pinyin_flypy=  | 雾凇（iDvel/rime-ice）| 小鹤双拼（主力）               |
 | =rime_ice=             | 雾凇（iDvel/rime-ice）| 雾凇拼音（全拼），与双拼共用词库 |
 
-语法模型（八股文 / librime-octagram）：三个方案都用 =wanxiang-lts-zh-hans.gram= —— 万象写在
-=wanxiang_pro.schema.yaml= 里，两个雾凇方案写在各自的 =*.custom.yaml= 里，参数各自调。
+语法模型（八股文 / librime-octagram）：两个方案都用 =wanxiang-lts-zh-hans.gram=，参数写在各自的
+=*.custom.yaml= 里，各自调。模型文件不进 git，用 grammar 配方下载（见下）。
 
 ** 更新
 
@@ -23,9 +22,6 @@
 #+BEGIN_SRC bash
 git -C ~/project/source/plum/package/iDvel/ice fetch --depth 1 origin
 git -C ~/project/source/plum/package/iDvel/ice reset --hard origin/main
-
-git -C ~/project/source/plum/package/amzxyz/rime_wanxiang fetch --depth 1 origin
-git -C ~/project/source/plum/package/amzxyz/rime_wanxiang reset --hard origin/wanxiang-flypy-fuzhu
 #+END_SRC
 
 （plum 的包缓存是 shallow clone，=git merge --ff-only= 会因历史不连通失败，所以用 =reset --hard=。
@@ -36,9 +32,6 @@ git -C ~/project/source/plum/package/amzxyz/rime_wanxiang reset --hard origin/wa
 #+BEGIN_SRC bash
 cd ~/project/source/plum/package/iDvel/ice
 no_update=1 bash ~/project/source/plum/rime-install iDvel/rime-ice
-
-cd ~/project/source/plum/package/amzxyz/rime_wanxiang
-no_update=1 bash ~/project/source/plum/rime-install amzxyz/rime_wanxiang@wanxiang-flypy-fuzhu:plum/full
 #+END_SRC
 
 =no_update=1= 表示直接用刚更新的包缓存（省略也行，plum 会自己 fetch，只是控制力差一点）。
@@ -53,8 +46,10 @@ cd ~/project/source/plum/package/iDvel/ice
 bash ~/project/source/plum/rime-install iDvel/rime-ice:others/recipes/grammar:schema=double_pinyin_flypy
 #+END_SRC
 
-注意：配方追加的 =__patch:= 块和你自己在 =patch:= 里手写的参数会同时存在，两边都改了
-=grammar/...= 时以哪个为准不确定，重复了就删掉一块。
+注意：配方追加的 =__patch:= 块（写在文件根层，和 rime-ice 文档里嵌在 =patch:= 内的写法不同）
+和你在 =patch:= 里手写的参数会同时存在。2026-09-29 实测：双拼方案那份根层 =__patch:= 是死块，
+删掉后 =patch:= 才生效（真正的根因是同一文件里的 =__include: octagram=，见 =AGENTS.md=）；
+=radical_pinyin.custom.yaml=、=melt_eng.custom.yaml= 里还有同类块，未验证是否生效。
 
 *** 为什么要先 =cd= 进包目录
 
@@ -65,12 +60,6 @@ plum 的 =scripts/install-packages.sh= 读 recipe 时是这么写的：
 =ls: ... No such file=），新文件缺失导致方案功能异常。
 
 从包目录里跑，通配符在包目录展开，文件清单才是完整的。
-
-*** 两个来源共写的文件
-
-万象和雾凇都会往同一个目录写这些名字：=default.yaml=、=weasel.yaml=、=custom_phrase.txt=、
-=lua/*=、=opencc/*=、=custom/*=。最后安装的那个覆盖先前的。方案本身不受影响（各自用各自的文件），
-但 =lua/number_translator.lua=、=lua/unicode.lua= 这类共享脚本会跟着翻转，出怪问题时先看这里。
 
 ** 部署
 
@@ -100,7 +89,7 @@ ibus
 =rime_ice.dict.yaml= 被就地改过（启用 =cn_dicts/41448= 大字表、追加 =cn_dicts/zhwiki= 和
 =cn_dicts/bible=），plum 每次都会把它覆盖回去，更新后要重新打这三行。
 
-=README.md= 是万象包随附的文档副本，会被 plum 覆盖，不要手改。
+=README.md= 已随万象清理删掉，本项目自己的文档就是本文件。
 
 方案 =*.custom.yaml= 末尾由配方追加的 =__patch:= 块（带 =# Rx:= 标记）也是 plum 管理的，
 重跑配方会替换，手改会被覆盖。

@@ -1,6 +1,10 @@
 # Rime custom
 # encoding: utf-8
 patch:
+  # 长词优先（上游只给全拼挂了，双拼补上；必须在 simplifier@emoji 之前）
+  # @before 5 是 filters 列表下标（0 起），上游往前面插 filter 时要跟着改
+  engine/filters/@before 5: lua_filter@*long_word_filter
+
   # 语法模型（八股文 / librime-octagram）
   # language 对应 Rime 目录下的 <name>.gram，模型缺了就不生效
   grammar:

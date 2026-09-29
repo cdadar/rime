@@ -1,4 +1,8 @@
 patch:
+  # 鼠须管实际读的是 squirrel.yaml 的 style，所以字体写在这里
+  style/font_face: "LXGW WenKai"
+  style/font_point: 13
+
   app_options:
     org.gnu.Emacs:
       ascii_mode: true

@@ -79,6 +79,9 @@ patch:
 - =brew install --cask font-plangothic / font-hanamin= 也行，但本机 Homebrew 是 Intel + Tier 3，
   且已在忽略未信任 tap，上次装字体就报错，直接下 TTF 更稳。花园明朝 =HanaMinA/B= 只覆盖到 Ext B。
 
+这四个字体在本仓库 =fonts/= 目录留了副本（带 =SHA256SUMS= 和许可说明），换机器时
+=bash fonts/install_fonts.sh= 就能装回去，不用再去各处下载 ×2。
+
 *** 验证
 
 #+BEGIN_SRC bash

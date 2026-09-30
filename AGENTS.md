@@ -38,6 +38,9 @@ cd ~/project/source/plum/package/iDvel/ice \
   - 本地手写、不属于任何上游：本文件、`README.org`、所有 `*.custom.yaml`、`custom_phrase_double.txt`、
     `rime.lua`、`flypy.user.txt`/`flypy.user.top.txt`（音形用户词库，运行时生成）、
     `installation.yaml`/`user.yaml`/`*.userdb`（后三者不入 git）。
+  - `fonts/`：第三方字体二进制存档（文楷 / 花园明朝 B / 遍黑体 P1+P2，共 85M）+ `SHA256SUMS` +
+    `LICENSE-OFL.txt` / `LICENSE-HanaMin.txt` + `install_fonts.sh`，**不归 plum 管、不随上游更新**；
+    换机器跑 `bash fonts/install_fonts.sh`。
   - `default.yaml`/`squirrel.yaml`/`weasel.yaml` 多个包都带同名文件，以最后跑的那个配方为准（当前 = ice 版）。
   - 万象（amzxyz/rime_wanxiang）：文件 2026-09-29 已全删（`wanxiang_*`、`dicts/`、`lua/super_*`、
     `custom/`、`README.md`）。
@@ -88,7 +91,7 @@ cd ~/project/source/plum/package/iDvel/ice \
   Plangothic P1/P2 管剩下的、P2 管 Ext G/H。覆盖不能想当然，用
   `perl ~/project/private/script/font_coverage.pl <字体>` 数（实测：文楷 Ext B 仅 3.9%，HanaMinB Ext B–F 全满）。
   验证：`fc-list ':charset=20000' family` 应看到 HanaMinB / Plangothic P1；细节与安装步骤见
-  `README.org` 的「字体」一节。
+  `README.org` 的「字体」一节，字体本体的副本 + 一键安装脚本在 `fonts/`（`bash fonts/install_fonts.sh`）。
 - 双拼方案的 filters 不能照抄全拼：`v_filter` 依赖全拼的 `v`=ü，而双拼里 `v`=zh，会让 `va/vi/vu`
   这类码的候选乱序（上游双拼没挂它是对的）；`long_word_filter`（长词优先）上游只给全拼挂了，
   双拼 2026-09-29 用 `engine/filters/@before 5` 补上（下标 0 起，上游往前插 filter 时要跟着改）。

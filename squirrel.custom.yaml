@@ -2,9 +2,9 @@ patch:
   # 鼠须管实际读的是 squirrel.yaml 的 style，所以字体写在这里。
   # 逗号分隔 = 字体回退链（CoreText cascadeList，顺序即优先级）；名字解析不到会被静默跳过，
   # 所以必须写本机真实存在的字体名（可用 fc-match "名字" 验）。
-  # Plangothic P1 兜 Ext B–F、P2 兜 Ext G 以上 —— macOS 自带字体没有 Ext B 字形，缺了这两段
-  # 生僻字会落到 /System/Library/Fonts/LastResort.otf（方块）。
-  style/font_face: "LXGW WenKai, Plangothic P1, Plangothic P2"
+  # 逐层：文楷（BMP+Ext A，楷体）→ HanaMinB / 花園明朝 B（Ext B–F，明朝体，楷→明气质接近）
+  # → 遍黑体 P2（Ext G/H）。不装 HanaMinB 的话 Ext B 会用黑体（P1），楷/黑混排看着割裂。
+  style/font_face: "LXGW WenKai, HanaMinB, Plangothic P1, Plangothic P2"
   style/font_point: 13
   style/label_font_face: "Menlo"          # 序号（12345）用等宽
   style/comment_font_face: "LXGW WenKai"  # 注释 / 拼音提示

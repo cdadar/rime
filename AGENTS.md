@@ -25,10 +25,8 @@ cd ~/project/source/plum/package/iDvel/ice \
 - 文件归属：iDvel/rime-ice → `rime_ice.*`、`double_pinyin*`、`en_dicts/`、`lua/*`、`opencc/*`。
   万象的文件 2026-09-29 已全删（`wanxiang_*`、`dicts/`、`lua/super_*`、`custom/`、`README.md`）。
 - `*.gram` 语法模型不进 git（已 ignore），靠 grammar 配方重下；仓库里不放几百 MB 的模型。
-- `*.custom.yaml` 末尾由配方追加的 `__patch:` 块是 plum 写的（`plum/scripts/recipe.sh` 的 `patch_file()`；
-  根层 `patch/+:`，往本文件 `patch` 再叠一层，重跑同一配方按 `# Rx:` 标记先删旧块再写）。这层是活的且
-  *优先级高于手写的 `patch:`*：同名键以它为准——实测那份会把 `schema_list` 从两项顶成一项，方案选单里
-  少一个方案。所以配方跑完要把值搬进 `patch:` 再删块。细节见 `README.org`。
+- `*.custom.yaml` 末尾若被 plum 配方追加了根层 `__patch:` 块，那层优先级高于手写 `patch:`，跑完要把值搬进
+  `patch:` 再删块 —— 见「patch 语法」的 `__patch:` 一节。
 - git 提交 / 推送由用户手动做，agent 不 push。
 
 ## patch 语法（`*.custom.yaml` 里 `patch:` 的可用写法）
@@ -46,6 +44,21 @@ cd ~/project/source/plum/package/iDvel/ice \
 
 - `@before` / `@after` / `@next` 依赖下标与元素位置，上游插入元素后即失效——优先用 `/+` 或改 `@n`；
   本仓库已有实例：双拼 `engine/filters/@before 5`。
+
+### `__patch:`（两种，别混）
+
+| 位置 | 谁写的 | 语义 |
+| --- | --- | --- |
+| 某个节点内（含根层） | Rime / 上游配置 | Rime 伪键：值是**补丁引用列表**，逐条 `文件:/节点?` 套用到所在节点。尾部 `?` = 节点不存在则跳过；文件名可省 `.yaml` |
+| 根层 + `# Rx:` 标记 | plum 配方 | 同上语法，但内容是 `patch/+: {...}`，等于往本文件 `patch` 再叠一层 |
+
+- Rime 侧实例：`luna_pinyin.schema.yaml` 根层 `__patch: - luna_pinyin.custom:/patch?`（方案拉自己的 custom 文件）；
+  `pinyin.yaml` 教用户写 `speller/algebra/__patch: - pinyin:/zh_z_bufen` 往前叠模糊音规则。
+- plum 侧：`scripts/recipe.sh` 的 `patch_file()` 往 `*.custom.yaml` 末尾追加根层 `__patch:` 块，
+  重跑同一配方按 `# Rx: <包>:<配方>:<参数>` 标记先删旧块再写。*这层优先级高于手写 `patch:`*，同名键被它顶掉
+  （实测会把手写 `schema_list` 从两项顶成一项）；所以配方跑完要把值搬进 `patch:` 再删整块。
+- 同族伪键只在被引用的补丁节点里有意义：`__append:` 追加列表、`__merge:` 合并字典（见 `pinyin.yaml` 的模糊音定义）。
+- 引用的节点名写错不报错，整份 patch 会静默失效 —— 见「已知坑」。
 
 ## 已知坑
 

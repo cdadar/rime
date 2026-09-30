@@ -83,9 +83,12 @@ cd ~/project/source/plum/package/iDvel/ice \
   `perl ~/project/private/script/rime_utf8_check.pl <文件或目录>`；② *字体覆盖*（见下一条）。
 - CJK Ext B（U+20000）以上 macOS 自带字体**没有**字形，全机只覆盖它的就是
   `/System/Library/Fonts/LastResort.otf`（方块）——笔画/部件拆字反查和大字表必然碰到。已在
-  `squirrel.custom.yaml` 里用回退链 `LXGW WenKai, Plangothic P1, Plangothic P2` 修掉（字体装在
-  `~/Library/Fonts`，P1 管 Ext B–F、P2 管 Ext G+）。验证：`fc-list ':charset=20000' family` 应有
-  Plangothic P1；细节与安装步骤见 `README.org` 的「字体」一节。
+  `squirrel.custom.yaml` 里用回退链 `LXGW WenKai, HanaMinB, Plangothic P1, Plangothic P2` 修掉
+  （字体装在 `~/Library/Fonts`）：文楷管基本区/Ext A，HanaMinB（花園明朝 B）管 Ext B–F 的明朝体，
+  Plangothic P1/P2 管剩下的、P2 管 Ext G/H。覆盖不能想当然，用
+  `perl ~/project/private/script/font_coverage.pl <字体>` 数（实测：文楷 Ext B 仅 3.9%，HanaMinB Ext B–F 全满）。
+  验证：`fc-list ':charset=20000' family` 应看到 HanaMinB / Plangothic P1；细节与安装步骤见
+  `README.org` 的「字体」一节。
 - 双拼方案的 filters 不能照抄全拼：`v_filter` 依赖全拼的 `v`=ü，而双拼里 `v`=zh，会让 `va/vi/vu`
   这类码的候选乱序（上游双拼没挂它是对的）；`long_word_filter`（长词优先）上游只给全拼挂了，
   双拼 2026-09-29 用 `engine/filters/@before 5` 补上（下标 0 起，上游往前插 filter 时要跟着改）。

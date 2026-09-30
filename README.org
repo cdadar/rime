@@ -18,42 +18,64 @@ RIME-LMDG 的推荐值，改的时候两边一起改。
 
 都在小鹤双拼里，三种：
 
-- 部件拆字：=uU= + 部件拼音（小鹤键位），如 =甪= 是 丿+用 → =uUppys=；上游自带。
-- 笔画：`` ` `` + 笔画键 =h= 横 =s= 竖 =p= 撇 =n= 捺 =z= 折，如 =日= → =`szhh=；本仓库在
-  =double_pinyin_flypy.custom.yaml= 里补的（依赖 =stroke= 包）。
-- 辅码检字：先打拼音，再打 `` ` `` + 偏旁部首拼音筛候选（=lua_filter@*search@radical_pinyin=）。
+- 部件拆字：打 =uU= 加部件拼音（小鹤键位）。如「甪」是 丿+用，敲 =uUppys= 就出来，上游自带。
+- 笔画：先敲反引号，再敲笔画键 =h= 横 / =s= 竖 / =p= 撇 / =n= 捺 / =z= 折。如 日 敲 =`szhh= 即可。
+  这是本仓库在 =double_pinyin_flypy.custom.yaml= 里补的（依赖 =stroke= 包）。
+- 辅码检字：先打拼音，再敲反引号加偏旁部首拼音筛候选，由 =lua/search.lua= 实现。
 
 ** 字体（生僻字能不能看见就看这里）
 
-鼠须管候选窗的字体在 =squirrel.custom.yaml= 里（真正读的是 =squirrel.yaml= 的 =style=，所以补丁写
-在这一层）。值是**逗号分隔的回退链**，顺序即优先级：前面的字体没字形时才用后面的。
+鼠须管候选窗的字体在 =squirrel.custom.yaml= 里（真正读的是 =squirrel.yaml= 的 style 节点，所以补丁写
+在这一层）。值是逗号分隔的回退链，顺序即优先级：前面的字体没字形时才用后面的。
 
 #+BEGIN_SRC yaml
 patch:
-  style/font_face: "LXGW WenKai, Plangothic P1, Plangothic P2"
+  style/font_face: "LXGW WenKai, HanaMinB, Plangothic P1, Plangothic P2"
   style/font_point: 13
   style/label_font_face: "Menlo"          # 序号（12345）等宽
   style/comment_font_face: "LXGW WenKai"  # 注释 / 拼音
 #+END_SRC
 
-- *为什么需要后两个*：macOS 自带字体**没有** CJK Ext B（U+20000）以上字形，缺字只能落到
-  =/System/Library/Fonts/LastResort.otf=（方块占位）。词库里这类字很多（=stroke.dict.yaml= 的 Ext B
-  就有 7.4 万），笔画/部件拆字反查和大字表必然碰到。实测：装遍黑体前，全机只有 LastResort 覆盖 U+20000。
-- 遍黑体分两个文件：*P1* 管 Ext B–F，*P2* 管 Ext G 以上，两个都要装。
-- 名字必须写**本机真名**，解析不到会被静默跳过（Squirrel 源码里是 =if let font = ...= 不成则丢）。
-  例如 =Consolas=、=Segoe UI=、=Microsoft YaHei=、=LXGW WenKai Screen= 在本机都没有，等同没写。
-- emoji 不用写进链里：macOS 会自己回退到 =Apple Color Emoji=，显式指定反而可能丢彩色。
+按字形覆盖分层，越靠后只管越偏门的段：
+
+| 层 | 字体                        | 风格   | 实测覆盖（font_coverage.pl）       |
+|----+-----------------------------+--------+------------------------------------|
+| 主 | LXGW WenKai（霞鹜文楷）    | 楷体   | URO 100%、Ext A 100%，Ext B 只有 3.9% |
+| 中 | HanaMinB（花園明朝 B）     | 明朝体 | Ext B 100%、C 99.9%、D/E/F 100%     |
+| 兜 | Plangothic P1 / P2（遍黑体）| 黑体   | P1：Ext B–F 全覆盖；P2：Ext G/H 全覆盖 |
+
+- 为什么必须有两层兜底：macOS 自带字体没有 CJK Ext B（U+20000）以上字形，缺字只能落到
+  =/System/Library/Fonts/LastResort.otf= 这个方块占位字体上。词库里这类字很多，光是 =stroke.dict.yaml= 的
+  Ext B 就有 7.4 万，笔画/部件拆字反查和大字表必然碰到。实测：装遍黑体前，全机只有 LastResort
+  覆盖 U+20000。
+- HanaMinB 与 Plangothic P1 在 Ext B–F 上重叠，留 P1 只是为了补 HanaMinB 缺的那几个字（Ext B 9 个、
+  Ext C 5 个）；想短一点可以只留 LXGW WenKai, HanaMinB, Plangothic P2，不装 HanaMinB 的话
+  Ext B 会直接用黑体，楷/黑混排就是「不和谐」的根源。
+- 只装 HanaMinB 不装 HanaMinA：基本区和 Ext A 文楷已经 100% 覆盖，A 版是明朝体，和文楷混排反而不统一。
+- 名字必须写本机真名，解析不到会被静默跳过（Squirrel 源码里是 =if let font = ...= 不成则丢）。
+  例如 Consolas、Segoe UI、Microsoft YaHei、LXGW WenKai Screen 在本机都没装，写了等同没写。
+- emoji 不用写进链里：macOS 会自己回退到 Apple Color Emoji，显式指定反而可能丢彩色。
 
 *** 装字体
 
-都放 =~/Library/Fonts=，装完 =fc-cache -f= 刷新（重启鼠须管也行），不需要 sudo。
+都放 ~/Library/Fonts，装完跑 fc-cache -f 刷新（重启鼠须管也行），不需要 sudo。
 
-- *霞鹜文楷*（=LXGW WenKai=，主字体）：<https://github.com/lxgw/LxgwWenKai/releases>，拷
-  =LXGWWenKai-Regular.ttf=；等宽版 =LXGWWenKaiMono-*.ttf= 同页。屏幕阅读版另在
-  <https://github.com/lxgw/LxgwWenKai-Screen/releases>（名字是 =LXGW WenKai Screen=）。
-- *遍黑体*（Plangothic，Ext B–G 兜底）：<https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic_Project/releases>，
-  下 =Plangothic-Static-*.zip=，解压出 =PlangothicP1-Regular.ttf= 和 =PlangothicP2-Regular.ttf= 两个都拷进去。
-  别用包里的 =.ttc=（macOS 下只会生效其中一个）。
+- 霞鹜文楷 (LXGW WenKai，主字体)：<https://github.com/lxgw/LxgwWenKai/releases>，拷
+  =LXGWWenKai-Regular.ttf= 常规字重；等宽版 =LXGWWenKaiMono-*.ttf= 同页。屏幕阅读版另在
+  <https://github.com/lxgw/LxgwWenKai-Screen/releases>，名字是 LXGW WenKai Screen。
+- 花園明朝 B (HanaMinB，Ext B–F 的明朝体兜底)：官方发布在
+  <https://osdn.net/projects/hanazono-font/releases/>，即 =hanazono-20170904.zip= 那份，≈29MB。osdn 不通时
+  从 Debian 拿同一个 20170904 版本：
+
+  #+BEGIN_SRC bash
+  curl -O https://deb.debian.org/debian/pool/main/f/fonts-hanazono/fonts-hanazono_20170904-3_all.deb
+  tar -xf fonts-hanazono_20170904-3_all.deb data.tar.xz
+  tar -xf data.tar.xz ./usr/share/fonts/truetype/hanazono/HanaMinB.ttf
+  cp usr/share/fonts/truetype/hanazono/HanaMinB.ttf ~/Library/Fonts/   # A 版不用装
+  #+END_SRC
+- 遍黑体（Plangothic，Ext B–G 兜底）：<https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic_Project/releases>，
+  下 =Plangothic-Static-*.zip= 解压，得到 =PlangothicP1-Regular.ttf= 和 =PlangothicP2-Regular.ttf= 两个文件都拷进去。
+  别用包里的 .ttc 文件，macOS 下只会生效其中一个。
 - =brew install --cask font-plangothic / font-hanamin= 也行，但本机 Homebrew 是 Intel + Tier 3，
   且已在忽略未信任 tap，上次装字体就报错，直接下 TTF 更稳。花园明朝 =HanaMinA/B= 只覆盖到 Ext B。
 
@@ -63,6 +85,12 @@ patch:
 fc-list ':charset=20000' family      # 应看到 Plangothic P1（装之前只有 .LastResort）
 fc-list ':charset=30000' family      # Ext G -> Plangothic P2
 fc-match 'Plangothic P1'             # 名字能解析，写进 font_face 才有效
+#+END_SRC
+
+逐字体看汉字段落覆盖（直接读文件，不用先安装）：
+
+#+BEGIN_SRC bash
+perl ~/project/private/script/font_coverage.pl ~/Library/Fonts/*.ttf
 #+END_SRC
 
 更接近实际的检查（复刻 Squirrel 的字体解析 + CoreText 回退，看某个码位落在哪个字体上）：
@@ -78,7 +106,7 @@ for cp in [0x4E00, 0x20000, 0x30000] {
 }' | swift -
 #+END_SRC
 
-期望：=U+20000 -> PlangothicP1=、=U+30000 -> PlangothicP2=；若两个都回 =LastResort=，就是字体没装成
+期望 U+20000 回 PlangothicP1、U+30000 回 PlangothicP2；两个都回 LastResort 就是字体没装成
 或名字写错。
 
 ** 更新
@@ -117,7 +145,7 @@ bash ~/project/source/plum/rime-install iDvel/rime-ice:others/recipes/grammar:sc
 
 配方会在文件末尾追加一个根层 =__patch:= 块（带 =# Rx:= 标记），跑完要按「本地自定义」说的清掉。
 
-*** 小鹤音形（=cubercsl/rime-flypy=）
+*** 小鹤音形 (cubercsl/rime-flypy)
 
 小鹤音形（音+形四码）不在雾凇包里，单独装；码表从官方鼠须管挂接包提取：
 
@@ -126,13 +154,13 @@ cd ~/project/source/plum/package/cubercsl/flypy
 no_update=1 bash ~/project/source/plum/rime-install cubercsl/rime-flypy
 #+END_SRC
 
-装出来：=flypy.schema.yaml=（小鹤音形）、=flypydz.*=（反查）、=flypyok.*=（ok 拼字）、
-=flypy/*.dict.yaml=（拆分的码表）、=lua/flypy_*.lua=。与 =double_pinyin_flypy= 零文件重叠，互不影响，
+装出来：flypy.schema.yaml（小鹤音形）、flypydz.*（反查）、flypyok.*（ok 拼字）、
+flypy/*.dict.yaml（拆分的码表）、lua/flypy_*.lua。与 =double_pinyin_flypy= 零文件重叠，互不影响，
 两者在 =default.custom.yaml= 的 =schema_list= 里并列。
 
-用户词库用纯文本（升级不会被覆盖）：=flypy.user.txt=（普通词，候选排在主码表之后）、
-=flypy.user.top.txt=（置顶词）。每行 =词条<Tab>编码[<Tab>权重]=，必须用 Tab 分隔，改完重新部署。
-（旧版 YAML 用户词库 =flypy/flypy.user*.dict.yaml= 已不再读取。）
+用户词库用纯文本（升级不会被覆盖）：flypy.user.txt（普通词，候选排在主码表之后）、
+flypy.user.top.txt（置顶词）。每行「词条 <Tab> 编码 [<Tab> 权重]」，必须用 Tab 分隔，改完重新部署。
+（旧版 YAML 用户词库 flypy/flypy.user*.dict.yaml 已不再读取。）
 
 *** 为什么要先 =cd= 进包目录
 

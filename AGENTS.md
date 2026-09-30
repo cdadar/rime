@@ -1,7 +1,8 @@
 # Rime 配置（个人）
 
-macOS 主力 Squirrel。只用一个双拼方案：`double_pinyin_flypy`（雾凇的小鹤双拼，主力），
-另挂 `rime_ice`（雾凇全拼，与双拼共用词库）。万象（amzxyz）全套已清掉，只剩它的 LTS 语法模型。
+macOS 主力 Squirrel。三套方案：`double_pinyin_flypy`（雾凇的小鹤双拼，主力）、`rime_ice`（雾凇全拼，
+与双拼共用词库）、`flypy`（小鹤音形，独立码表，来自 cubercsl/rime-flypy，与双拼零文件重叠）。
+万象（amzxyz）全套已清掉，只剩它的 LTS 语法模型（双拼/全拼两套在用）。
 
 ## 更新上游：唯一机制是 plum，不要用 git pull
 
@@ -22,8 +23,24 @@ cd ~/project/source/plum/package/iDvel/ice \
 - 自定义只写 `*.custom.yaml`。直接改上游文件下次更新会被覆盖。
 - `rime_ice.dict.yaml` 有 3 处本地自定义（启用 `cn_dicts/41448`、追加 `zhwiki`/`bible`），
   每次更新后必须重打 —— plum 会原样覆盖它。
-- 文件归属：iDvel/rime-ice → `rime_ice.*`、`double_pinyin*`、`en_dicts/`、`lua/*`、`opencc/*`。
-  万象的文件 2026-09-29 已全删（`wanxiang_*`、`dicts/`、`lua/super_*`、`custom/`、`README.md`）。
+- 文件归属（按上游来源分层；改了上游文件下次 plum 更新就被覆盖，所以自定义只写 `*.custom.yaml`）：
+  - iDvel/rime-ice（配方 `all`）：`rime_ice.*`、`double_pinyin*`、`melt_eng.*`、`radical_pinyin.*`、
+    `t9.schema.yaml`、`symbols_v.yaml`、`symbols_caps_v.yaml`、`custom_phrase.txt`、`default.yaml`、
+    `squirrel.yaml`、`weasel.yaml`、`cn_dicts/`、`en_dicts/`、`lua/`、`others/`、`opencc/`（emoji 三件除外）。
+  - rime/* 官方预置（`prelude` → `key_bindings.yaml`/`punctuation.yaml`/`symbols.yaml`；`luna-pinyin` →
+    `luna_*`/`pinyin.yaml`；`cangjie` → `cangjie5*`；`wubi` → `wubi*`；`pinyin-simp` → `pinyin_simp*`；
+    `stroke` → `stroke*`；`terra-pinyin` → `terra_pinyin*`；`bopomofo` → `bopomofo*`/`detenele`/`zhuyin.yaml`；
+    `emoji` → `emoji_suggestion.yaml` + `opencc/emoji{,_category,_word}.*`；`essay` → `essay.txt`）。
+  - 单独装的 rime 包：`radical-pinyin` → `radical.schema.yaml`、`radical_flypy.dict.yaml`；
+    `xhup` → `xhup*.schema.yaml`；`kaomoji` → `kaomoji.{schema,dict}.yaml`。
+  - cubercsl/rime-flypy（小鹤音形，配方 `flypy`）：`flypy.schema.yaml`、`flypy.dict.yaml`、`flypydz.*`、
+    `flypyok.*`、`flypy/*.dict.yaml`、`lua/flypy_{date,time}_translator.lua`、`lua/calculator_translator.lua`。
+  - 本地手写、不属于任何上游：本文件、`README.org`、所有 `*.custom.yaml`、`custom_phrase_double.txt`、
+    `rime.lua`、`flypy.user.txt`/`flypy.user.top.txt`（音形用户词库，运行时生成）、
+    `installation.yaml`/`user.yaml`/`*.userdb`（后三者不入 git）。
+  - `default.yaml`/`squirrel.yaml`/`weasel.yaml` 多个包都带同名文件，以最后跑的那个配方为准（当前 = ice 版）。
+  - 万象（amzxyz/rime_wanxiang）：文件 2026-09-29 已全删（`wanxiang_*`、`dicts/`、`lua/super_*`、
+    `custom/`、`README.md`）。
 - `*.gram` 语法模型不进 git（已 ignore），靠 grammar 配方重下；仓库里不放几百 MB 的模型。
 - `*.custom.yaml` 末尾若被 plum 配方追加了根层 `__patch:` 块，那层优先级高于手写 `patch:`，跑完要把值搬进
   `patch:` 再删块 —— 见「patch 语法」的 `__patch:` 一节。
@@ -75,11 +92,17 @@ cd ~/project/source/plum/package/iDvel/ice \
 
 ## 当前状态
 
+- 小鹤音形（`flypy`，cubercsl/rime-flypy）2026-09-30 装好并部署：`flypy`/`flypydz`/`flypyok` 三份 schema +
+  `flypy/` 码表 + 三个 lua。与双拼零文件重叠（`git status` 只有新增，双拼源文件与 build 产物字节不变，
+  差异只在 `__build_info/timestamps/default.custom` 这个 mtime 字段）。验证：`grep -A6 '^schema_list'
+  build/default.yaml` 有三项；`ls build/flypy.{schema.yaml,prism.bin,table.bin,reverse.bin}`；
+  日志 `dictionary 'flypy' is ready` 且无 E 行。用户词库 = `flypy.user.txt` / `flypy.user.top.txt`（Tab 分隔）。
 - rime_ice 已同步到上游 `3aea6d3`（2026-09-25），已部署（鼠须管），已推送到 origin/master。
 - 语法模型 `wanxiang-lts-zh-hans.gram`（413MB）不再进 git，靠 grammar 配方重下；万象包本身已清掉，
   但两个方案都还在用它。
 - 两个方案的 grammar 参数各自写在 `*.custom.yaml` 里；双拼那套 2026-09-29 起才真正生效
   （此前 `__include: octagram` 让整份 patch 失效）。验证：`grep grammar build/double_pinyin_flypy.schema.yaml`。
 - macOS 字体在 `squirrel.custom.yaml`（文楷 13）；`default.custom.yaml` 里那份只给 linux/windows 前端。
-- 仓库里还留着一批 rime 预置死方案（`luna_pinyin*`/`cangjie5*`/`bopomofo*`/`stroke*`/`terra_pinyin*`/
-  `radical.schema.yaml`+`radical_flypy.dict.yaml` 等，都不在 `schema_list` 里，≈7M），未清理。
+- 仓库里还留着一批 rime 预置方案（`luna_pinyin*`/`cangjie5*`/`wubi*`/`pinyin_simp*`/`bopomofo*`/`stroke*`/
+  `terra_pinyin*`/`xhup*`/`kaomoji*`/`radical.schema.yaml`+`radical_flypy.dict.yaml` 等，都不在 `schema_list` 里，
+  ≈13M），未清理。

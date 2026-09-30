@@ -1,13 +1,14 @@
 * 个人的 rime 配置
 
-主力是鼠须管（macOS）。一个双拼方案（小鹤）+ 一个全拼方案（雾凇），都用万象的 LTS 语法模型。
+主力是鼠须管（macOS）。三套方案：小鹤双拼（主力）、雾凇全拼、小鹤音形。双拼与全拼同用万象的 LTS 语法模型。
 
 ** 方案
 
-| 方案                   | 来源                  | 说明                           |
-|------------------------+-----------------------+--------------------------------|
-| =double_pinyin_flypy=  | 雾凇（iDvel/rime-ice）| 小鹤双拼（主力）               |
-| =rime_ice=             | 雾凇（iDvel/rime-ice）| 雾凇拼音（全拼），与双拼共用词库 |
+| 方案                  | 来源                            | 说明                             |
+|-----------------------+---------------------------------+----------------------------------|
+| =double_pinyin_flypy= | 雾凇（iDvel/rime-ice）          | 小鹤双拼（主力）                 |
+| =rime_ice=            | 雾凇（iDvel/rime-ice）          | 雾凇拼音（全拼），与双拼共用词库 |
+| =flypy=               | 小鹤音形（cubercsl/rime-flypy） | 小鹤音形（音+形四码），独立码表  |
 
 语法模型（八股文 / librime-octagram）：两个方案都用 =wanxiang-lts-zh-hans.gram=，来自 RIME-LMDG 的
 LTS release（grammar 配方下载，见下）。参数写在各自的 =*.custom.yaml= 里；双拼那份用的就是配方 /
@@ -48,6 +49,23 @@ bash ~/project/source/plum/rime-install iDvel/rime-ice:others/recipes/grammar:sc
 #+END_SRC
 
 配方会在文件末尾追加一个根层 =__patch:= 块（带 =# Rx:= 标记），跑完要按「本地自定义」说的清掉。
+
+*** 小鹤音形（=cubercsl/rime-flypy=）
+
+小鹤音形（音+形四码）不在雾凇包里，单独装；码表从官方鼠须管挂接包提取：
+
+#+BEGIN_SRC bash
+cd ~/project/source/plum/package/cubercsl/flypy
+no_update=1 bash ~/project/source/plum/rime-install cubercsl/rime-flypy
+#+END_SRC
+
+装出来：=flypy.schema.yaml=（小鹤音形）、=flypydz.*=（反查）、=flypyok.*=（ok 拼字）、
+=flypy/*.dict.yaml=（拆分的码表）、=lua/flypy_*.lua=。与 =double_pinyin_flypy= 零文件重叠，互不影响，
+两者在 =default.custom.yaml= 的 =schema_list= 里并列。
+
+用户词库用纯文本（升级不会被覆盖）：=flypy.user.txt=（普通词，候选排在主码表之后）、
+=flypy.user.top.txt=（置顶词）。每行 =词条<Tab>编码[<Tab>权重]=，必须用 Tab 分隔，改完重新部署。
+（旧版 YAML 用户词库 =flypy/flypy.user*.dict.yaml= 已不再读取。）
 
 *** 为什么要先 =cd= 进包目录
 

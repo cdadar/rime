@@ -1,0 +1,37 @@
+* 字体存档（迁移用）
+
+这个目录是当前候选字体链里那几个字体的副本，为的是换机器时不用再到处下载。
+链本身写在 =squirrel.custom.yaml= 里，为什么需要这几层见 =../README.org= 的「字体」一节。
+
+| 文件                     | 层                    | 大小 | 来源 / 许可                                               |
+|--------------------------+-----------------------+------+-----------------------------------------------------------|
+| LXGWWenKai-Regular.ttf   | 主：基本区 + Ext A    | 24M  | lxgw/LxgwWenKai，SIL OFL 1.1                              |
+| HanaMinB.ttf             | 中：Ext B–F（明朝体） | 29M  | 花園明朝 20170904（hanazono-font），Hanazono-Font-License |
+| PlangothicP1-Regular.ttf | 兜：Ext B–F（黑体）   | 19M  | Plangothic V2.9.5795，SIL OFL 1.1                         |
+| PlangothicP2-Regular.ttf | 兜：Ext G/H（黑体）   | 12M  | 同上                                                      |
+
+同目录的 =SHA256SUMS= 是上表的校验和，安装脚本会先验一遍。
+
+** 安装（新机器）
+
+#+BEGIN_SRC bash
+bash fonts/install_fonts.sh            # 默认拷到 ~/Library/Fonts
+bash fonts/install_fonts.sh /tmp/fonts # 或指定目标目录（先试装）
+fc-cache -f                            # 刷新字体缓存，然后重启鼠须管
+#+END_SRC
+
+装完按 =../README.org= 「字体」一节验证，用 =fc-list ':charset=20000' family= 应能看到 HanaMinB 与
+Plangothic P1，CoreText 探针则显示 U+20000 → HanaMinB、U+30000 → PlangothicP2。
+
+** 许可
+
+- =LICENSE-OFL.txt= 是 SIL Open Font License 1.1，随文楷分发；遍黑体的字体文件同样是 OFL-1.1
+  （上游自带 LICENSE-OFL.txt，正文相同），所以一份覆盖两者。
+- =LICENSE-HanaMin.txt= 是花園明朝的授权说明，取自 Debian =fonts-hanazono= 包的 copyright
+  （Hanazono-Font-License or Open-Font-License）。
+
+** 维护
+
+- 这些文件来自上游，别就地改。上游发新版时替换文件、同步本表，并在本目录重生成校验和：
+  跑 =shasum -a 256 *.ttf > SHA256SUMS= 即可。
+- 没进这里的字体：思源宋体、文楷 Light/Medium/Mono、Nerd Font 等——字体链里用不到，按需另装。

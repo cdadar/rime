@@ -14,6 +14,73 @@
 LTS release（grammar 配方下载，见下）。参数写在各自的 =*.custom.yaml= 里；双拼那份用的就是配方 /
 RIME-LMDG 的推荐值，改的时候两边一起改。
 
+** 反查（不会读的字）
+
+都在小鹤双拼里，三种：
+
+- 部件拆字：=uU= + 部件拼音（小鹤键位），如 =甪= 是 丿+用 → =uUppys=；上游自带。
+- 笔画：`` ` `` + 笔画键 =h= 横 =s= 竖 =p= 撇 =n= 捺 =z= 折，如 =日= → =`szhh=；本仓库在
+  =double_pinyin_flypy.custom.yaml= 里补的（依赖 =stroke= 包）。
+- 辅码检字：先打拼音，再打 `` ` `` + 偏旁部首拼音筛候选（=lua_filter@*search@radical_pinyin=）。
+
+** 字体（生僻字能不能看见就看这里）
+
+鼠须管候选窗的字体在 =squirrel.custom.yaml= 里（真正读的是 =squirrel.yaml= 的 =style=，所以补丁写
+在这一层）。值是**逗号分隔的回退链**，顺序即优先级：前面的字体没字形时才用后面的。
+
+#+BEGIN_SRC yaml
+patch:
+  style/font_face: "LXGW WenKai, Plangothic P1, Plangothic P2"
+  style/font_point: 13
+  style/label_font_face: "Menlo"          # 序号（12345）等宽
+  style/comment_font_face: "LXGW WenKai"  # 注释 / 拼音
+#+END_SRC
+
+- *为什么需要后两个*：macOS 自带字体**没有** CJK Ext B（U+20000）以上字形，缺字只能落到
+  =/System/Library/Fonts/LastResort.otf=（方块占位）。词库里这类字很多（=stroke.dict.yaml= 的 Ext B
+  就有 7.4 万），笔画/部件拆字反查和大字表必然碰到。实测：装遍黑体前，全机只有 LastResort 覆盖 U+20000。
+- 遍黑体分两个文件：*P1* 管 Ext B–F，*P2* 管 Ext G 以上，两个都要装。
+- 名字必须写**本机真名**，解析不到会被静默跳过（Squirrel 源码里是 =if let font = ...= 不成则丢）。
+  例如 =Consolas=、=Segoe UI=、=Microsoft YaHei=、=LXGW WenKai Screen= 在本机都没有，等同没写。
+- emoji 不用写进链里：macOS 会自己回退到 =Apple Color Emoji=，显式指定反而可能丢彩色。
+
+*** 装字体
+
+都放 =~/Library/Fonts=，装完 =fc-cache -f= 刷新（重启鼠须管也行），不需要 sudo。
+
+- *霞鹜文楷*（=LXGW WenKai=，主字体）：<https://github.com/lxgw/LxgwWenKai/releases>，拷
+  =LXGWWenKai-Regular.ttf=；等宽版 =LXGWWenKaiMono-*.ttf= 同页。屏幕阅读版另在
+  <https://github.com/lxgw/LxgwWenKai-Screen/releases>（名字是 =LXGW WenKai Screen=）。
+- *遍黑体*（Plangothic，Ext B–G 兜底）：<https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic_Project/releases>，
+  下 =Plangothic-Static-*.zip=，解压出 =PlangothicP1-Regular.ttf= 和 =PlangothicP2-Regular.ttf= 两个都拷进去。
+  别用包里的 =.ttc=（macOS 下只会生效其中一个）。
+- =brew install --cask font-plangothic / font-hanamin= 也行，但本机 Homebrew 是 Intel + Tier 3，
+  且已在忽略未信任 tap，上次装字体就报错，直接下 TTF 更稳。花园明朝 =HanaMinA/B= 只覆盖到 Ext B。
+
+*** 验证
+
+#+BEGIN_SRC bash
+fc-list ':charset=20000' family      # 应看到 Plangothic P1（装之前只有 .LastResort）
+fc-list ':charset=30000' family      # Ext G -> Plangothic P2
+fc-match 'Plangothic P1'             # 名字能解析，写进 font_face 才有效
+#+END_SRC
+
+更接近实际的检查（复刻 Squirrel 的字体解析 + CoreText 回退，看某个码位落在哪个字体上）：
+
+#+BEGIN_SRC bash
+echo 'import AppKit
+import CoreText
+let f = NSFont(descriptor: NSFontDescriptor(fontAttributes: [.name: "LXGW WenKai"]), size: 14)!
+for cp in [0x4E00, 0x20000, 0x30000] {
+  let s = String(Character(Unicode.Scalar(cp)!))
+  let fb = CTFontCreateForString(f as CTFont, s as CFString, CFRange(location: 0, length: s.utf16.count))
+  print(String(format: "U+%05X -> %@", cp, CTFontCopyPostScriptName(fb) as String))
+}' | swift -
+#+END_SRC
+
+期望：=U+20000 -> PlangothicP1=、=U+30000 -> PlangothicP2=；若两个都回 =LastResort=，就是字体没装成
+或名字写错。
+
 ** 更新
 
 上游更新一律走 plum（东风破），不要在本目录里跑 =git pull=。每次两步：先把 plum 的包缓存

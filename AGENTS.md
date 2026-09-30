@@ -79,6 +79,13 @@ cd ~/project/source/plum/package/iDvel/ice \
 
 ## 已知坑
 
+- 生僻字显示成方块/乱码先分清两件事：① *编码*（词库有没有非法 UTF-8、孤立代理项）——
+  `perl ~/project/private/script/rime_utf8_check.pl <文件或目录>`；② *字体覆盖*（见下一条）。
+- CJK Ext B（U+20000）以上 macOS 自带字体**没有**字形，全机只覆盖它的就是
+  `/System/Library/Fonts/LastResort.otf`（方块）——笔画/部件拆字反查和大字表必然碰到。已在
+  `squirrel.custom.yaml` 里用回退链 `LXGW WenKai, Plangothic P1, Plangothic P2` 修掉（字体装在
+  `~/Library/Fonts`，P1 管 Ext B–F、P2 管 Ext G+）。验证：`fc-list ':charset=20000' family` 应有
+  Plangothic P1；细节与安装步骤见 `README.org` 的「字体」一节。
 - 双拼方案的 filters 不能照抄全拼：`v_filter` 依赖全拼的 `v`=ü，而双拼里 `v`=zh，会让 `va/vi/vu`
   这类码的候选乱序（上游双拼没挂它是对的）；`long_word_filter`（长词优先）上游只给全拼挂了，
   双拼 2026-09-29 用 `engine/filters/@before 5` 补上（下标 0 起，上游往前插 filter 时要跟着改）。
@@ -92,6 +99,11 @@ cd ~/project/source/plum/package/iDvel/ice \
 
 ## 当前状态
 
+- 双拼的笔画反查 2026-09-30 补在 `double_pinyin_flypy.custom.yaml`（上游 rime-ice 没有，用 `stroke` 包）：
+  `` ` `` + 笔画键 h/s/p/n/z，配合 `engine/translators/+`、`reverse_lookup`、`recognizer/patterns/reverse_lookup`、
+  `schema/dependencies/+: [stroke]`（不依赖就不编译 stroke.dict.yaml）。验证：`grep -n
+  reverse_lookup build/double_pinyin_flypy.schema.yaml`（translator + 节点 + pattern 三处）、`ls build/stroke.table.bin`、
+  日志 `dictionary 'stroke' is ready`。它和上游那套部件拆字反查（`uU` + 部件、`radical_lookup`）共存、互不干扰。
 - 小鹤音形（`flypy`，cubercsl/rime-flypy）2026-09-30 装好并部署：`flypy`/`flypydz`/`flypyok` 三份 schema +
   `flypy/` 码表 + 三个 lua。与双拼零文件重叠（`git status` 只有新增，双拼源文件与 build 产物字节不变，
   差异只在 `__build_info/timestamps/default.custom` 这个 mtime 字段）。验证：`grep -A6 '^schema_list'

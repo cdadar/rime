@@ -218,8 +218,18 @@ fc-list ':charset=30000' family      # Ext G -> Plangothic P2
 fc-match 'Plangothic P1'             # 名字能解析，写进 font_face 才有效
 #+END_SRC
 
-逐字体看汉字段落覆盖（直接读文件，不用先安装）：拿任意「统计字体对 CJK 各段码位覆盖」的
-工具跑一遍即可，判据看两件事：文楷 Ext B 只有个位数百分比，HanaMinB 的 Ext B–F 接近 100%。
+逐字体看汉字段落覆盖（直接读文件，不用先安装）。判据看两件事：文楷 Ext B 只有个位数百分比，
+HanaMinB 的 Ext B–F 接近 100%。
+
+#+BEGIN_SRC bash
+perl scripts/font_coverage.pl ~/Library/Fonts/*.ttf   # 依赖 fc-query（brew install fontconfig）
+#+END_SRC
+
+词库本身的编码体检（非法 UTF-8、孤立代理项、PUA、Ext A/B 用量）：
+
+#+BEGIN_SRC bash
+perl scripts/rime_utf8_check.pl .
+#+END_SRC
 
 更接近实际的检查（复刻 Squirrel 的字体解析 + CoreText 回退，看某个码位落在哪个字体上）：
 

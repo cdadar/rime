@@ -15,10 +15,13 @@
 ** 安装（新机器）
 
 #+BEGIN_SRC bash
-bash fonts/install_fonts.sh            # 默认拷到 ~/Library/Fonts
-bash fonts/install_fonts.sh /tmp/fonts # 或指定目标目录（先试装）
-fc-cache -f                            # 刷新字体缓存，然后重启鼠须管
+bash fonts/install_fonts.sh            # 装到 ~/Library/Fonts（同版本则跳过）
+bash fonts/install_fonts.sh --dry-run  # 先看要做什么
+bash fonts/install_fonts.sh /tmp/fonts # 或指定目标目录（先试装，参数见 -h）
 #+END_SRC
+
+脚本自己定位本目录取字体，先跑 =shasum -a 256 -c SHA256SUMS= 校验，装完 =fc-cache -f=，
+最后列出覆盖 =U+20000= 的字体族。
 
 装完按 =../README.org= 「字体」一节验证，用 =fc-list ':charset=20000' family= 应能看到 HanaMinB 与
 Plangothic P1，CoreText 探针则显示 U+20000 → HanaMinB、U+30000 → PlangothicP2。

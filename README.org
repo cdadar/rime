@@ -201,11 +201,14 @@ patch:
 - 遍黑体（Plangothic，Ext B–G 兜底）：<https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic_Project/releases>，
   下 =Plangothic-Static-*.zip= 解压，得到 =PlangothicP1-Regular.ttf= 和 =PlangothicP2-Regular.ttf= 两个文件都拷进去。
   别用包里的 .ttc 文件，macOS 下只会生效其中一个。
-- =brew install --cask font-plangothic / font-hanamin= 也行，但本机 Homebrew 是 Intel + Tier 3，
-  且已在忽略未信任 tap，上次装字体就报错，直接下 TTF 更稳。花园明朝 =HanaMinA/B= 只覆盖到 Ext B。
+- =brew install --cask font-plangothic / font-hanamin= 也行，但本机 Homebrew（arm64，=/opt/homebrew=）
+  没装任何 tap（=brew tap= 为空，cask 走 API），上次装字体就报错，直接下 TTF 更稳。
+  花园明朝 =HanaMinA/B= 只覆盖到 Ext B。
 
 这四个字体在本仓库 =fonts/= 目录留了副本（带 =SHA256SUMS= 和许可说明），换机器时
-=bash fonts/install_fonts.sh= 就能装回去，不用再去各处下载 ×2。
+=bash fonts/install_fonts.sh= 就能装回去，不用再去各处下载 ×2。脚本做四件事：=shasum -c=
+校验存档 → 拷到 =~/Library/Fonts=（字节相同则跳过，幂等）→ =fc-cache -f= → 列出覆盖
+=U+20000= 的字体族。支持 =--dry-run= / =--force= / =--dest=。
 
 *** 验证
 
@@ -215,11 +218,8 @@ fc-list ':charset=30000' family      # Ext G -> Plangothic P2
 fc-match 'Plangothic P1'             # 名字能解析，写进 font_face 才有效
 #+END_SRC
 
-逐字体看汉字段落覆盖（直接读文件，不用先安装）：
-
-#+BEGIN_SRC bash
-perl font_coverage.pl ~/Library/Fonts/*.ttf
-#+END_SRC
+逐字体看汉字段落覆盖（直接读文件，不用先安装）：拿任意「统计字体对 CJK 各段码位覆盖」的
+工具跑一遍即可，判据看两件事：文楷 Ext B 只有个位数百分比，HanaMinB 的 Ext B–F 接近 100%。
 
 更接近实际的检查（复刻 Squirrel 的字体解析 + CoreText 回退，看某个码位落在哪个字体上）：
 
